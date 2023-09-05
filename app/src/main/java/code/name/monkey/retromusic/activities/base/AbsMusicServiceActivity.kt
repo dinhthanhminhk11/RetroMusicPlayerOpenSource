@@ -58,7 +58,6 @@ abstract class AbsMusicServiceActivity : AbsBaseActivity(), IMusicServiceEventLi
                 this@AbsMusicServiceActivity.onServiceDisconnected()
             }
         })
-
         setPermissionDeniedMessage(getString(R.string.permission_external_storage_denied))
     }
 

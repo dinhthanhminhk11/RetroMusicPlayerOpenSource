@@ -350,7 +350,7 @@ class RealRepository(
     }
 
     override suspend fun topArtistsHome(): Home {
-        val artists = topPlayedRepository.topArtists().take(5)
+        val artists = topPlayedRepository.topArtists().take(5) // lấy ra 5 phần tử lưu vào list
         return Home(artists, TOP_ARTISTS, R.string.top_artists)
     }
 

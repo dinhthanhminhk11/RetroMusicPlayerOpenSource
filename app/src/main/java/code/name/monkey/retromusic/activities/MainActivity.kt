@@ -14,6 +14,7 @@
  */
 package code.name.monkey.retromusic.activities
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -23,7 +24,11 @@ import androidx.navigation.contains
 import androidx.navigation.ui.setupWithNavController
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.activities.base.AbsCastActivity
-import code.name.monkey.retromusic.extensions.*
+import code.name.monkey.retromusic.extensions.currentFragment
+import code.name.monkey.retromusic.extensions.extra
+import code.name.monkey.retromusic.extensions.findNavController
+import code.name.monkey.retromusic.extensions.hideStatusBar
+import code.name.monkey.retromusic.extensions.setTaskDescriptionColorAuto
 import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.helper.SearchQueryHelper.getSongs
 import code.name.monkey.retromusic.interfaces.IScrollHelper
@@ -65,17 +70,15 @@ class MainActivity : AbsCastActivity() {
         if (categoryInfo.visible) {
             if (!navGraph.contains(PreferenceUtil.lastTab)) PreferenceUtil.lastTab =
                 categoryInfo.category.id
-            navGraph.setStartDestination(
-                if (PreferenceUtil.rememberLastTab) {
-                    PreferenceUtil.lastTab.let {
-                        if (it == 0) {
-                            categoryInfo.category.id
-                        } else {
-                            it
-                        }
+            navGraph.setStartDestination(if (PreferenceUtil.rememberLastTab) {
+                PreferenceUtil.lastTab.let {
+                    if (it == 0) {
+                        categoryInfo.category.id
+                    } else {
+                        it
                     }
-                } else categoryInfo.category.id
-            )
+                }
+            } else categoryInfo.category.id)
         }
         navController.graph = navGraph
         navigationView.setupWithNavController(navController)
@@ -92,7 +95,14 @@ class MainActivity : AbsCastActivity() {
                 currentFragment(R.id.fragment_container)?.enterTransition = null
             }
             when (destination.id) {
-                R.id.action_home, R.id.action_song, R.id.action_album, R.id.action_artist, R.id.action_folder, R.id.action_playlist, R.id.action_genre, R.id.action_search -> {
+                R.id.action_home,
+                R.id.action_song,
+                R.id.action_album,
+                R.id.action_artist,
+                R.id.action_folder,
+                R.id.action_playlist,
+                R.id.action_genre,
+                R.id.action_search -> {
                     // Save the last tab
                     if (PreferenceUtil.rememberLastTab) {
                         saveTab(destination.id)
@@ -100,12 +110,13 @@ class MainActivity : AbsCastActivity() {
                     // Show Bottom Navigation Bar
                     setBottomNavVisibility(visible = true, animate = true)
                 }
+
                 R.id.playing_queue_fragment -> {
                     setBottomNavVisibility(visible = false, hideBottomSheet = true)
                 }
+
                 else -> setBottomNavVisibility(
-                    visible = false,
-                    animate = true
+                    visible = false, animate = true
                 ) // Hide Bottom Navigation Bar
             }
         }
@@ -120,6 +131,7 @@ class MainActivity : AbsCastActivity() {
     override fun onSupportNavigateUp(): Boolean =
         findNavController(R.id.fragment_container).navigateUp()
 
+    @SuppressLint("MissingSuperCall")
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         val expand = intent?.extra<Boolean>(EXPAND_PANEL)?.value ?: false
@@ -142,9 +154,7 @@ class MainActivity : AbsCastActivity() {
             val uri: Uri? = intent.data
             val mimeType: String? = intent.type
             var handled = false
-            if (intent.action != null &&
-                intent.action == MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH
-            ) {
+            if (intent.action != null && intent.action == MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH) {
                 val songs: List<Song> = getSongs(intent.extras!!)
                 if (MusicPlayerRemote.shuffleMode == MusicService.SHUFFLE_MODE_SHUFFLE) {
                     MusicPlayerRemote.openAndShuffleQueue(songs, true)
@@ -170,9 +180,7 @@ class MainActivity : AbsCastActivity() {
                     val position: Int = intent.getIntExtra("position", 0)
                     val songs = libraryViewModel.albumById(id).songs
                     MusicPlayerRemote.openQueue(
-                        songs,
-                        position,
-                        true
+                        songs, position, true
                     )
                     handled = true
                 }
@@ -182,9 +190,7 @@ class MainActivity : AbsCastActivity() {
                     val position: Int = intent.getIntExtra("position", 0)
                     val songs: List<Song> = libraryViewModel.artistById(id).songs
                     MusicPlayerRemote.openQueue(
-                        songs,
-                        position,
-                        true
+                        songs, position, true
                     )
                     handled = true
                 }

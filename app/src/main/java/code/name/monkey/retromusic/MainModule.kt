@@ -4,7 +4,6 @@ import androidx.room.Room
 import code.name.monkey.retromusic.auto.AutoMusicProvider
 import code.name.monkey.retromusic.cast.RetroWebServer
 import code.name.monkey.retromusic.db.MIGRATION_23_24
-import code.name.monkey.retromusic.db.PlaylistWithSongs
 import code.name.monkey.retromusic.db.RetroDatabase
 import code.name.monkey.retromusic.fragments.LibraryViewModel
 import code.name.monkey.retromusic.fragments.albums.AlbumDetailsViewModel
@@ -23,7 +22,6 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val networkModule = module {
-
     factory {
         provideDefaultCache()
     }
@@ -39,7 +37,6 @@ val networkModule = module {
 }
 
 private val roomModule = module {
-
     single {
         Room.databaseBuilder(androidContext(), RetroDatabase::class.java, "playlist.db")
             .addMigrations(MIGRATION_23_24)
