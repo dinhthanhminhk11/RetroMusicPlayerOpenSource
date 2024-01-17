@@ -33,9 +33,6 @@ class TintedBottomNavigationView @JvmOverloads constructor(
 
     init {
         if (!isInEditMode) {
-            // If we are in Immersive mode we have to just set empty OnApplyWindowInsetsListener as
-            // bottom, start, and end padding is always applied (with the help of OnApplyWindowInsetsListener) to
-            // BottomNavigationView to dodge the system navigation bar (so we basically clear that listener).
             if (PreferenceUtil.isFullScreenMode) {
                 setOnApplyWindowInsetsListener { _, insets ->
                     insets
@@ -52,6 +49,7 @@ class TintedBottomNavigationView @JvmOverloads constructor(
             labelVisibilityMode = PreferenceUtil.tabTitleMode
 
             if (!PreferenceUtil.materialYou) {
+                // set color bottom bar
                 val iconColor = ATHUtil.resolveColor(context, android.R.attr.colorControlNormal)
                 val accentColor = ThemeStore.accentColor(context)
                 setItemColors(iconColor, accentColor)

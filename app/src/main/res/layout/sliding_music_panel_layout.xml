@@ -48,8 +48,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:clickable="true"
         android:minHeight="@dimen/bottom_nav_height"
         app:itemHorizontalTranslationEnabled="false"
+        app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_navigation_main"
-        tools:viewBindingType="com.google.android.material.navigation.NavigationBarView"/>
+        tools:viewBindingType="com.google.android.material.navigation.NavigationBarView" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

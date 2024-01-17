@@ -90,6 +90,8 @@ class MainActivity : AbsCastActivity() {
                 }
             }
         }
+
+        // click item
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == navGraph.startDestinationId) {
                 currentFragment(R.id.fragment_container)?.enterTransition = null
