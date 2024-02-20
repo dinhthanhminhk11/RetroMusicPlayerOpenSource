@@ -177,8 +177,4 @@ dependencies {
     implementation 'me.zhanghai.android.fastscroll:library:1.2.0'
     implementation 'cat.ereza:customactivityoncrash:2.4.0'
     implementation 'me.tankery.lib:circularSeekBar:1.4.1'
-
-    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
-    implementation "com.google.dagger:hilt-android:2.33-beta"
-    ksp "com.google.dagger:hilt-compiler:2.33-beta"
 }

@@ -13,9 +13,7 @@ import code.name.monkey.retromusic.service.playback.Playback.PlaybackCallbacks
 import code.name.monkey.retromusic.util.PreferenceUtil.isGapLessPlayback
 import code.name.monkey.retromusic.util.logE
 
-/**
- * @author Andrew Neal, Karim Abou Zeid (kabouzeid)
- */
+
 class MultiPlayer(context: Context) : LocalPlayback(context) {
     private var mCurrentMediaPlayer = MediaPlayer()
     private var mNextMediaPlayer: MediaPlayer? = null

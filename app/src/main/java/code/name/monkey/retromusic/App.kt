@@ -11,10 +11,8 @@ import code.name.monkey.retromusic.activities.MainActivity
 import code.name.monkey.retromusic.appshortcuts.DynamicShortcutManager
 import code.name.monkey.retromusic.billing.BillingManager
 import code.name.monkey.retromusic.helper.WallpaperAccentManager
-import dagger.hilt.android.HiltAndroidApp
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
-@HiltAndroidApp
 class App : Application() {
 
     lateinit var billingManager: BillingManager
@@ -31,7 +29,7 @@ class App : Application() {
         // default theme
         if (!ThemeStore.isConfigured(this, 3)) {
             ThemeStore.editTheme(this)
-                .accentColorRes(code.name.monkey.appthemehelper.R.color.md_deep_purple_A200)
+                .accentColorRes(code.name.monkey.appthemehelper.R.color.md_deep_orange_A400)
                 .coloredNavigationBar(true)
                 .commit()
         }

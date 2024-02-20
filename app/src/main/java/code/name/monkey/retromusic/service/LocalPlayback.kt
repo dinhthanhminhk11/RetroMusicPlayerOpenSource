@@ -121,7 +121,8 @@ abstract class LocalPlayback(val context: Context) : Playback, MediaPlayer.OnErr
         player.reset()
         try {
             if (path.startsWith("content://")) {
-                player.setDataSource(context, path.toUri())
+                player.setDataSource(context , path.toUri())
+//                player.setDataSource("https://res.cloudinary.com/dw6wgytc3/video/upload/v1708268427/NODEJS/dgamzmzmkmx8ktrstusv.mp3") // set dữ liệu nhạc
             } else {
                 player.setDataSource(path)
             }

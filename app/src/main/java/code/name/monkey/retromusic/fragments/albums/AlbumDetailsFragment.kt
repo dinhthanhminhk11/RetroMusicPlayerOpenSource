@@ -81,7 +81,7 @@ class AlbumDetailsFragment : AbsMainActivityFragment(R.layout.fragment_album_det
 
     private val arguments by navArgs<AlbumDetailsFragmentArgs>()
     private val detailsViewModel by viewModel<AlbumDetailsViewModel> {
-        parametersOf(arguments.extraAlbumId)
+        parametersOf(arguments.extraAlbumId) //  check bên main_graph
     }
 
     private lateinit var simpleSongAdapter: SimpleSongAdapter

@@ -84,7 +84,7 @@
         android:scrollHorizontally="true"
         android:singleLine="true"
         android:textAppearance="@style/TextViewBody1"
-        android:textColor="?android:attr/textColorSecondary"
+        android:textColor="@color/md_red_400"
         app:layout_constraintBottom_toTopOf="@+id/songInfo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
