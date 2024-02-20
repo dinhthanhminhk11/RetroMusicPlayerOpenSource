@@ -29,7 +29,7 @@ import java.util.List;
 import code.name.monkey.retromusic.App;
 import code.name.monkey.retromusic.Constants;
 import code.name.monkey.retromusic.model.Song;
-import code.name.monkey.retromusic.repository.RealSongRepository;
+import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealSongLocalDataRepositoryImpl;
 
 /**
  * @author Andrew Neal, modified for Phonograph by Karim Abou Zeid
@@ -159,7 +159,7 @@ public class MusicPlaybackQueueStore extends SQLiteOpenHelper {
   @NonNull
   private List<Song> getQueue(@NonNull final String tableName) {
     Cursor cursor = getReadableDatabase().query(tableName, null, null, null, null, null, null);
-    return new RealSongRepository(App.Companion.getContext()).songs(cursor);
+    return new RealSongLocalDataRepositoryImpl(App.Companion.getContext()).songs(cursor);
   }
 
   /**

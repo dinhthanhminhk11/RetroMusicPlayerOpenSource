@@ -2,7 +2,7 @@ package code.name.monkey.retromusic.model
 
 import android.content.Context
 import android.os.Parcelable
-import code.name.monkey.retromusic.repository.RealPlaylistRepository
+import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealPlaylistLocalDataRepositoryImpl
 import code.name.monkey.retromusic.util.MusicUtil
 import kotlinx.parcelize.Parcelize
 import org.koin.core.component.KoinComponent
@@ -20,7 +20,7 @@ open class Playlist(
 
     // this default implementation covers static playlists
     fun getSongs(): List<Song> {
-        return RealPlaylistRepository(get()).playlistSongs(id)
+        return RealPlaylistLocalDataRepositoryImpl(get()).playlistSongs(id)
     }
 
     open fun getInfoString(context: Context): String {

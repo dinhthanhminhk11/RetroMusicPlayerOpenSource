@@ -16,6 +16,25 @@ import code.name.monkey.retromusic.network.provideLastFmRest
 import code.name.monkey.retromusic.network.provideLastFmRetrofit
 import code.name.monkey.retromusic.network.provideOkHttp
 import code.name.monkey.retromusic.repository.*
+import code.name.monkey.retromusic.repository.dataSource.local.AlbumLocalDataRepository
+import code.name.monkey.retromusic.repository.dataSource.local.ArtistLocalDataRepository
+import code.name.monkey.retromusic.repository.dataSource.local.GenreLocalDataRepository
+import code.name.monkey.retromusic.repository.dataSource.local.LastAddedLocalDataRepository
+import code.name.monkey.retromusic.repository.dataSource.local.LocalDataRepository
+import code.name.monkey.retromusic.repository.dataSource.local.PlaylistLocalDataRepository
+import code.name.monkey.retromusic.repository.dataSource.local.RoomLocalDataRepository
+import code.name.monkey.retromusic.repository.dataSource.local.SongLocalDataRepository
+import code.name.monkey.retromusic.repository.dataSource.local.TopPlayedLocalDataRepository
+import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealAlbumLocalDataRepositoryImpl
+import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealArtistLocalDataRepositoryImpl
+import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealGenreLocalDataRepositoryImpl
+import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealLastAddedRepositoryImpl
+import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealLocalDataRepositoryImpl
+import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealPlaylistLocalDataRepositoryImpl
+import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealRoomLocalDataRepositoryImpl
+import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealSearchRepositoryImpl
+import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealSongLocalDataRepositoryImpl
+import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealTopPlayedLocalDataRepositoryImpl
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.bind
@@ -56,8 +75,8 @@ private val roomModule = module {
     }
 
     single {
-        RealRoomRepository(get(), get(), get())
-    } bind RoomRepository::class
+        RealRoomLocalDataRepositoryImpl(get(), get(), get())
+    } bind RoomLocalDataRepository::class
 }
 private val autoModule = module {
     single {
@@ -82,7 +101,7 @@ private val mainModule = module {
 }
 private val dataModule = module {
     single {
-        RealRepository(
+        RealRepositoryImpl(
             get(),
             get(),
             get(),
@@ -99,39 +118,39 @@ private val dataModule = module {
     } bind Repository::class
 
     single {
-        RealSongRepository(get())
-    } bind SongRepository::class
+        RealSongLocalDataRepositoryImpl(get())
+    } bind SongLocalDataRepository::class
 
     single {
-        RealGenreRepository(get(), get())
-    } bind GenreRepository::class
+        RealGenreLocalDataRepositoryImpl(get(), get())
+    } bind GenreLocalDataRepository::class
 
     single {
-        RealAlbumRepository(get())
-    } bind AlbumRepository::class
+        RealAlbumLocalDataRepositoryImpl(get())
+    } bind AlbumLocalDataRepository::class
 
     single {
-        RealArtistRepository(get(), get())
-    } bind ArtistRepository::class
+        RealArtistLocalDataRepositoryImpl(get(), get())
+    } bind ArtistLocalDataRepository::class
 
     single {
-        RealPlaylistRepository(get())
-    } bind PlaylistRepository::class
+        RealPlaylistLocalDataRepositoryImpl(get())
+    } bind PlaylistLocalDataRepository::class
 
     single {
-        RealTopPlayedRepository(get(), get(), get(), get())
-    } bind TopPlayedRepository::class
+        RealTopPlayedLocalDataRepositoryImpl(get(), get(), get(), get())
+    } bind TopPlayedLocalDataRepository::class
 
     single {
-        RealLastAddedRepository(
+        RealLastAddedRepositoryImpl(
             get(),
             get(),
             get()
         )
-    } bind LastAddedRepository::class
+    } bind LastAddedLocalDataRepository::class
 
     single {
-        RealSearchRepository(
+        RealSearchRepositoryImpl(
             get(),
             get(),
             get(),
@@ -140,7 +159,7 @@ private val dataModule = module {
         )
     }
     single {
-        RealLocalDataRepository(get())
+        RealLocalDataRepositoryImpl(get())
     } bind LocalDataRepository::class
 }
 

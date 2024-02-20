@@ -1,18 +1,4 @@
-/*
- * Copyright (c) 2019 Hemanth Savarala.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by
- *  the Free Software Foundation either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- */
-
-package code.name.monkey.retromusic.repository
+package code.name.monkey.retromusic.repository.dataSourceImpl.local
 
 import android.content.ContentResolver
 import android.database.Cursor
@@ -28,33 +14,13 @@ import code.name.monkey.retromusic.extensions.getStringOrNull
 import code.name.monkey.retromusic.model.Playlist
 import code.name.monkey.retromusic.model.PlaylistSong
 import code.name.monkey.retromusic.model.Song
+import code.name.monkey.retromusic.repository.dataSource.local.PlaylistLocalDataRepository
 
-/**
- * Created by hemanths on 16/08/17.
- */
-interface PlaylistRepository {
-    fun playlist(cursor: Cursor?): Playlist
 
-    fun searchPlaylist(query: String): List<Playlist>
-
-    fun playlist(playlistName: String): Playlist
-
-    fun playlists(): List<Playlist>
-
-    fun playlists(cursor: Cursor?): List<Playlist>
-
-    fun favoritePlaylist(playlistName: String): List<Playlist>
-
-    fun deletePlaylist(playlistId: Long)
-
-    fun playlist(playlistId: Long): Playlist
-
-    fun playlistSongs(playlistId: Long): List<Song>
-}
 @Suppress("Deprecation")
-class RealPlaylistRepository(
+class RealPlaylistLocalDataRepositoryImpl(
     private val contentResolver: ContentResolver
-) : PlaylistRepository {
+) : PlaylistLocalDataRepository {
 
     override fun playlist(cursor: Cursor?): Playlist {
         return cursor.use {

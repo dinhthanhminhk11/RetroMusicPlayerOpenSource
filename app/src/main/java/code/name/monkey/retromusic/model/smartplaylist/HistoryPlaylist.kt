@@ -13,6 +13,6 @@ class HistoryPlaylist : AbsSmartPlaylist(
 ), KoinComponent {
 
     override fun songs(): List<Song> {
-        return topPlayedRepository.recentlyPlayedTracks()
+        return topPlayedLocalDataRepository.recentlyPlayedTracks()
     }
 }

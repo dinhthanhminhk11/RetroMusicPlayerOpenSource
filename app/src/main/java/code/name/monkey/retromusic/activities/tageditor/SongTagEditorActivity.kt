@@ -34,7 +34,7 @@ import code.name.monkey.retromusic.extensions.*
 import code.name.monkey.retromusic.glide.RetroGlideExtension.asBitmapPalette
 import code.name.monkey.retromusic.glide.palette.BitmapPaletteWrapper
 import code.name.monkey.retromusic.model.ArtworkInfo
-import code.name.monkey.retromusic.repository.SongRepository
+import code.name.monkey.retromusic.repository.dataSource.local.SongLocalDataRepository
 import code.name.monkey.retromusic.util.ImageUtil
 import code.name.monkey.retromusic.util.MusicUtil
 import code.name.monkey.retromusic.util.RetroColorUtil
@@ -54,7 +54,7 @@ class SongTagEditorActivity : AbsTagEditorActivity<ActivitySongTagEditorBinding>
         ActivitySongTagEditorBinding::inflate
 
 
-    private val songRepository by inject<SongRepository>()
+    private val songLocalRepository by inject<SongLocalDataRepository>()
 
     private var albumArtBitmap: Bitmap? = null
     private var deleteAlbumArt: Boolean = false
@@ -167,7 +167,7 @@ class SongTagEditorActivity : AbsTagEditorActivity<ActivitySongTagEditorBinding>
         )
     }
 
-    override fun getSongPaths(): List<String> = listOf(songRepository.song(id).data)
+    override fun getSongPaths(): List<String> = listOf(songLocalRepository.song(id).data)
 
     override fun getSongUris(): List<Uri> = listOf(MusicUtil.getSongFileUri(id))
 

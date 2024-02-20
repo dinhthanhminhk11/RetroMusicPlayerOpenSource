@@ -20,12 +20,12 @@ import code.name.monkey.retromusic.model.Album
 import code.name.monkey.retromusic.model.Artist
 import code.name.monkey.retromusic.network.Result
 import code.name.monkey.retromusic.network.model.LastFmAlbum
-import code.name.monkey.retromusic.repository.RealRepository
+import code.name.monkey.retromusic.repository.RealRepositoryImpl
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 class AlbumDetailsViewModel(
-    private val repository: RealRepository,
+    private val repository: RealRepositoryImpl,
     private val albumId: Long
 ) : ViewModel(), IMusicServiceEventListener {
     private val albumDetails = MutableLiveData<Album>()

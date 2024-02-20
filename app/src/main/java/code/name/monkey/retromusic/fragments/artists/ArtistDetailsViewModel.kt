@@ -19,12 +19,12 @@ import code.name.monkey.retromusic.interfaces.IMusicServiceEventListener
 import code.name.monkey.retromusic.model.Artist
 import code.name.monkey.retromusic.network.Result
 import code.name.monkey.retromusic.network.model.LastFmArtist
-import code.name.monkey.retromusic.repository.RealRepository
+import code.name.monkey.retromusic.repository.RealRepositoryImpl
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 class ArtistDetailsViewModel(
-    private val realRepository: RealRepository,
+    private val realRepositoryImpl: RealRepositoryImpl,
     private val artistId: Long?,
     private val artistName: String?
 ) : ViewModel(), IMusicServiceEventListener {
@@ -36,9 +36,9 @@ class ArtistDetailsViewModel(
 
     private fun fetchArtist() {
         viewModelScope.launch(IO) {
-            artistId?.let { artistDetails.postValue(realRepository.artistById(it)) }
+            artistId?.let { artistDetails.postValue(realRepositoryImpl.artistById(it)) }
 
-            artistName?.let { artistDetails.postValue(realRepository.albumArtistByName(it)) }
+            artistName?.let { artistDetails.postValue(realRepositoryImpl.albumArtistByName(it)) }
         }
     }
 
@@ -50,7 +50,7 @@ class ArtistDetailsViewModel(
         cache: String?
     ): LiveData<Result<LastFmArtist>> = liveData(IO) {
         emit(Result.Loading)
-        val info = realRepository.artistInfo(name, lang, cache)
+        val info = realRepositoryImpl.artistInfo(name, lang, cache)
         emit(info)
     }
 

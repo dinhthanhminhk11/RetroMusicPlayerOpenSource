@@ -11,6 +11,6 @@ class ShuffleAllPlaylist : AbsSmartPlaylist(
     iconRes = R.drawable.ic_shuffle
 ) {
     override fun songs(): List<Song> {
-        return songRepository.songs()
+        return songLocalRepository.songs()
     }
 }

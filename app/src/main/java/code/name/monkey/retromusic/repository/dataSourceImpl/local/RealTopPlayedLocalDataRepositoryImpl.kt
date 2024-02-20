@@ -12,7 +12,7 @@
  * See the GNU General Public License for more details.
  */
 
-package code.name.monkey.retromusic.repository
+package code.name.monkey.retromusic.repository.dataSourceImpl.local
 
 import android.content.Context
 import android.database.Cursor
@@ -24,6 +24,8 @@ import code.name.monkey.retromusic.model.Artist
 import code.name.monkey.retromusic.model.Song
 import code.name.monkey.retromusic.providers.HistoryStore
 import code.name.monkey.retromusic.providers.SongPlayCountStore
+import code.name.monkey.retromusic.repository.SortedLongCursor
+import code.name.monkey.retromusic.repository.dataSource.local.TopPlayedLocalDataRepository
 import code.name.monkey.retromusic.util.PreferenceUtil
 
 
@@ -31,24 +33,14 @@ import code.name.monkey.retromusic.util.PreferenceUtil
  * Created by hemanths on 16/08/17.
  */
 
-interface TopPlayedRepository {
-    fun recentlyPlayedTracks(): List<Song>
 
-    fun topTracks(): List<Song>
 
-    fun notRecentlyPlayedTracks(): List<Song>
-
-    fun topAlbums(): List<Album>
-
-    fun topArtists(): List<Artist>
-}
-
-class RealTopPlayedRepository(
+class RealTopPlayedLocalDataRepositoryImpl(
     private val context: Context,
-    private val songRepository: RealSongRepository,
-    private val albumRepository: RealAlbumRepository,
-    private val artistRepository: RealArtistRepository
-) : TopPlayedRepository {
+    private val songRepository: RealSongLocalDataRepositoryImpl,
+    private val albumRepository: RealAlbumLocalDataRepositoryImpl,
+    private val artistRepository: RealArtistLocalDataRepositoryImpl
+) : TopPlayedLocalDataRepository {
 
     override fun recentlyPlayedTracks(): List<Song> {
         return songRepository.songs(makeRecentTracksCursorAndClearUpDatabase())

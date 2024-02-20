@@ -12,7 +12,7 @@
  * See the GNU General Public License for more details.
  */
 
-package code.name.monkey.retromusic.repository
+package code.name.monkey.retromusic.repository.dataSourceImpl.local
 
 import android.content.Context
 import android.database.Cursor
@@ -31,6 +31,7 @@ import code.name.monkey.retromusic.extensions.getStringOrNull
 import code.name.monkey.retromusic.helper.SortOrder
 import code.name.monkey.retromusic.model.Song
 import code.name.monkey.retromusic.providers.BlacklistStore
+import code.name.monkey.retromusic.repository.dataSource.local.SongLocalDataRepository
 import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.getExternalStoragePublicDirectory
 import java.text.Collator
@@ -38,24 +39,9 @@ import java.text.Collator
 /**
  * Created by hemanths on 10/08/17.
  */
-interface SongRepository {
 
-    fun songs(): List<Song>
 
-    fun songs(cursor: Cursor?): List<Song>
-
-    fun sortedSongs(cursor: Cursor?): List<Song>
-
-    fun songs(query: String): List<Song>
-
-    fun songsByFilePath(filePath: String, ignoreBlacklist: Boolean = false): List<Song>
-
-    fun song(cursor: Cursor?): Song
-
-    fun song(songId: Long): Song
-}
-
-class RealSongRepository(private val context: Context) : SongRepository {
+class RealSongLocalDataRepositoryImpl(private val context: Context) : SongLocalDataRepository {
 
     override fun songs(): List<Song> {
         return sortedSongs(makeSongCursor(null, null))

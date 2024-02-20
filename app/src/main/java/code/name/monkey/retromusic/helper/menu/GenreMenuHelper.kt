@@ -21,8 +21,8 @@ import code.name.monkey.retromusic.dialogs.AddToPlaylistDialog
 import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.model.Genre
 import code.name.monkey.retromusic.model.Song
-import code.name.monkey.retromusic.repository.GenreRepository
-import code.name.monkey.retromusic.repository.RealRepository
+import code.name.monkey.retromusic.repository.RealRepositoryImpl
+import code.name.monkey.retromusic.repository.dataSource.local.GenreLocalDataRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,7 +32,7 @@ import org.koin.core.component.get
 import org.koin.core.component.inject
 
 object GenreMenuHelper : KoinComponent {
-    private val genreRepository by inject<GenreRepository>()
+    private val genreLocalDataRepository by inject<GenreLocalDataRepository>()
     fun handleMenuClick(activity: FragmentActivity, genre: Genre, item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_play -> {
@@ -45,7 +45,7 @@ object GenreMenuHelper : KoinComponent {
             }
             R.id.action_add_to_playlist -> {
                 CoroutineScope(Dispatchers.IO).launch {
-                    val playlists = get<RealRepository>().fetchPlaylists()
+                    val playlists = get<RealRepositoryImpl>().fetchPlaylists()
                     withContext(Dispatchers.Main) {
                         AddToPlaylistDialog.create(playlists, getGenreSongs(genre))
                             .show(activity.supportFragmentManager, "ADD_PLAYLIST")
@@ -62,6 +62,6 @@ object GenreMenuHelper : KoinComponent {
     }
 
     private fun getGenreSongs(genre: Genre): List<Song> {
-        return genreRepository.songs(genre.id)
+        return genreLocalDataRepository.songs(genre.id)
     }
 }

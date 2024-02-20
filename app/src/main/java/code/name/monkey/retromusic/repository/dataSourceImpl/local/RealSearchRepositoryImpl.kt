@@ -1,18 +1,5 @@
-/*
- * Copyright (c) 2019 Hemanth Savarala.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by
- *  the Free Software Foundation either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- */
 
-package code.name.monkey.retromusic.repository
+package code.name.monkey.retromusic.repository.dataSourceImpl.local
 
 import android.content.Context
 import code.name.monkey.retromusic.R
@@ -22,13 +9,18 @@ import code.name.monkey.retromusic.model.Album
 import code.name.monkey.retromusic.model.Artist
 import code.name.monkey.retromusic.model.Genre
 import code.name.monkey.retromusic.model.Song
+import code.name.monkey.retromusic.repository.dataSource.local.AlbumLocalDataRepository
+import code.name.monkey.retromusic.repository.dataSource.local.ArtistLocalDataRepository
+import code.name.monkey.retromusic.repository.dataSource.local.GenreLocalDataRepository
+import code.name.monkey.retromusic.repository.dataSource.local.RoomLocalDataRepository
+import code.name.monkey.retromusic.repository.dataSource.local.SongLocalDataRepository
 
-class RealSearchRepository(
-    private val songRepository: SongRepository,
-    private val albumRepository: AlbumRepository,
-    private val artistRepository: ArtistRepository,
-    private val roomRepository: RoomRepository,
-    private val genreRepository: GenreRepository,
+class RealSearchRepositoryImpl(
+    private val songLocalRepository: SongLocalDataRepository,
+    private val albumLocalDataRepository: AlbumLocalDataRepository,
+    private val artistLocalDataRepository: ArtistLocalDataRepository,
+    private val roomLocalDataRepository: RoomLocalDataRepository,
+    private val genreLocalDataRepository: GenreLocalDataRepository,
 ) {
     suspend fun searchAll(context: Context, query: String?, filter: Filter): MutableList<Any> {
         val results = mutableListOf<Any>()
@@ -37,7 +29,7 @@ class RealSearchRepository(
 
             /** Songs **/
             val songs: List<Song> = if (filter == Filter.SONGS || filter == Filter.NO_FILTER) {
-                songRepository.songs(searchString)
+                songLocalRepository.songs(searchString)
             } else {
                 emptyList()
             }
@@ -49,7 +41,7 @@ class RealSearchRepository(
             /** Artists **/
             val artists: List<Artist> =
                 if (filter == Filter.ARTISTS || filter == Filter.NO_FILTER) {
-                    artistRepository.artists(searchString)
+                    artistLocalDataRepository.artists(searchString)
                 } else {
                     emptyList()
                 }
@@ -60,7 +52,7 @@ class RealSearchRepository(
 
             /** Albums **/
             val albums: List<Album> = if (filter == Filter.ALBUMS || filter == Filter.NO_FILTER) {
-                albumRepository.albums(searchString)
+                albumLocalDataRepository.albums(searchString)
             } else {
                 emptyList()
             }
@@ -72,7 +64,7 @@ class RealSearchRepository(
             /** Album-Artists **/
             val albumArtists: List<Artist> =
                 if (filter == Filter.ALBUM_ARTISTS || filter == Filter.NO_FILTER) {
-                    artistRepository.albumArtists(searchString)
+                    artistLocalDataRepository.albumArtists(searchString)
                 } else {
                     emptyList()
                 }
@@ -83,7 +75,7 @@ class RealSearchRepository(
 
             /** Genres **/
             val genres: List<Genre> = if (filter == Filter.GENRES || filter == Filter.NO_FILTER) {
-                genreRepository.genres(query)
+                genreLocalDataRepository.genres(query)
             } else {
                 emptyList()
             }
@@ -95,7 +87,7 @@ class RealSearchRepository(
             /** Playlists **/
             val playlist: List<PlaylistWithSongs> =
                 if (filter == Filter.PLAYLISTS || filter == Filter.NO_FILTER) {
-                    roomRepository.playlistWithSongs().filter { playlist ->
+                    roomLocalDataRepository.playlistWithSongs().filter { playlist ->
                         playlist.playlistEntity.playlistName.lowercase().contains(searchString.lowercase())
                     }
                 } else {

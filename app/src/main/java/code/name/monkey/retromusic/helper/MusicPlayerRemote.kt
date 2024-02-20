@@ -26,7 +26,7 @@ import androidx.core.content.ContextCompat
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.extensions.showToast
 import code.name.monkey.retromusic.model.Song
-import code.name.monkey.retromusic.repository.SongRepository
+import code.name.monkey.retromusic.repository.dataSource.local.SongLocalDataRepository
 import code.name.monkey.retromusic.service.CastPlayer
 import code.name.monkey.retromusic.service.MusicService
 import code.name.monkey.retromusic.util.getExternalStorageDirectory
@@ -43,7 +43,7 @@ object MusicPlayerRemote : KoinComponent {
     private val mConnectionMap = WeakHashMap<Context, ServiceBinder>()
     var musicService: MusicService? = null
 
-    private val songRepository by inject<SongRepository>()
+    private val songLocalRepository by inject<SongLocalDataRepository>()
 
     @JvmStatic
     val isPlaying: Boolean
@@ -413,7 +413,7 @@ object MusicPlayerRemote : KoinComponent {
                         songId = uri.lastPathSegment
                     }
                     if (songId != null) {
-                        songs = songRepository.songs(songId)
+                        songs = songLocalRepository.songs(songId)
                     }
                 }
             }
@@ -434,7 +434,7 @@ object MusicPlayerRemote : KoinComponent {
                     songFile = File(uri.path!!)
                 }
                 if (songFile != null) {
-                    songs = songRepository.songsByFilePath(songFile.absolutePath, true)
+                    songs = songLocalRepository.songsByFilePath(songFile.absolutePath, true)
                 }
             }
             if (!songs.isNullOrEmpty()) {

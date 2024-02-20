@@ -21,6 +21,12 @@ import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.model.CategoryInfo
 import code.name.monkey.retromusic.model.Song
 import code.name.monkey.retromusic.repository.*
+import code.name.monkey.retromusic.repository.dataSource.local.AlbumLocalDataRepository
+import code.name.monkey.retromusic.repository.dataSource.local.ArtistLocalDataRepository
+import code.name.monkey.retromusic.repository.dataSource.local.GenreLocalDataRepository
+import code.name.monkey.retromusic.repository.dataSource.local.PlaylistLocalDataRepository
+import code.name.monkey.retromusic.repository.dataSource.local.SongLocalDataRepository
+import code.name.monkey.retromusic.repository.dataSource.local.TopPlayedLocalDataRepository
 import code.name.monkey.retromusic.service.MusicService
 import code.name.monkey.retromusic.util.MusicUtil
 import code.name.monkey.retromusic.util.PreferenceUtil
@@ -32,12 +38,12 @@ import java.lang.ref.WeakReference
  */
 class AutoMusicProvider(
     private val mContext: Context,
-    private val songsRepository: SongRepository,
-    private val albumsRepository: AlbumRepository,
-    private val artistsRepository: ArtistRepository,
-    private val genresRepository: GenreRepository,
-    private val playlistsRepository: PlaylistRepository,
-    private val topPlayedRepository: TopPlayedRepository
+    private val songsRepository: SongLocalDataRepository,
+    private val albumsRepository: AlbumLocalDataRepository,
+    private val artistsRepository: ArtistLocalDataRepository,
+    private val genresRepository: GenreLocalDataRepository,
+    private val playlistsRepository: PlaylistLocalDataRepository,
+    private val topPlayedLocalDataRepository: TopPlayedLocalDataRepository
 ) {
     private var mMusicService: WeakReference<MusicService>? = null
 
@@ -129,13 +135,13 @@ class AutoMusicProvider(
     ) {
         val songs = when (mediaId) {
             AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS -> {
-                topPlayedRepository.topTracks()
+                topPlayedLocalDataRepository.topTracks()
             }
             AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY -> {
-                topPlayedRepository.recentlyPlayedTracks()
+                topPlayedLocalDataRepository.recentlyPlayedTracks()
             }
             AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_SUGGESTIONS -> {
-                topPlayedRepository.notRecentlyPlayedTracks().take(8)
+                topPlayedLocalDataRepository.notRecentlyPlayedTracks().take(8)
             }
             else -> {
                 emptyList()
@@ -233,7 +239,7 @@ class AutoMusicProvider(
                 .subTitle(
                     MusicUtil.getPlaylistInfoString(
                         mContext,
-                        topPlayedRepository.topTracks()
+                        topPlayedLocalDataRepository.topTracks()
                     )
                 )
                 .asBrowsable().build()
@@ -247,7 +253,7 @@ class AutoMusicProvider(
                 .subTitle(
                     MusicUtil.getPlaylistInfoString(
                         mContext,
-                        topPlayedRepository.notRecentlyPlayedTracks().takeIf {
+                        topPlayedLocalDataRepository.notRecentlyPlayedTracks().takeIf {
                             it.size > 9
                         } ?: emptyList()
                     )
@@ -263,7 +269,7 @@ class AutoMusicProvider(
                 .subTitle(
                     MusicUtil.getPlaylistInfoString(
                         mContext,
-                        topPlayedRepository.recentlyPlayedTracks()
+                        topPlayedLocalDataRepository.recentlyPlayedTracks()
                     )
                 )
                 .asBrowsable().build()

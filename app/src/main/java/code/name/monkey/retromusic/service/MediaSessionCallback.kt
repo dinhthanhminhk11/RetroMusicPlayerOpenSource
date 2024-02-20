@@ -1,16 +1,3 @@
-/*
- * Copyright (c) 2019 Hemanth Savarala.
- *
- * Licensed under the GNU General Public License v3
- *
- * This is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by
- *  the Free Software Foundation either version 3 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- */
 
 package code.name.monkey.retromusic.service
 
@@ -26,6 +13,12 @@ import code.name.monkey.retromusic.model.Artist
 import code.name.monkey.retromusic.model.Playlist
 import code.name.monkey.retromusic.model.Song
 import code.name.monkey.retromusic.repository.*
+import code.name.monkey.retromusic.repository.dataSource.local.AlbumLocalDataRepository
+import code.name.monkey.retromusic.repository.dataSource.local.ArtistLocalDataRepository
+import code.name.monkey.retromusic.repository.dataSource.local.GenreLocalDataRepository
+import code.name.monkey.retromusic.repository.dataSource.local.PlaylistLocalDataRepository
+import code.name.monkey.retromusic.repository.dataSource.local.SongLocalDataRepository
+import code.name.monkey.retromusic.repository.dataSource.local.TopPlayedLocalDataRepository
 import code.name.monkey.retromusic.service.MusicService.Companion.CYCLE_REPEAT
 import code.name.monkey.retromusic.service.MusicService.Companion.TOGGLE_FAVORITE
 import code.name.monkey.retromusic.service.MusicService.Companion.TOGGLE_SHUFFLE
@@ -35,20 +28,18 @@ import code.name.monkey.retromusic.util.logE
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-/**
- * Created by hemanths on 2019-08-01.
- */
+
 
 class MediaSessionCallback(
     private val musicService: MusicService,
 ) : MediaSessionCompat.Callback(), KoinComponent {
 
-    private val songRepository by inject<SongRepository>()
-    private val albumRepository by inject<AlbumRepository>()
-    private val artistRepository by inject<ArtistRepository>()
-    private val genreRepository by inject<GenreRepository>()
-    private val playlistRepository by inject<PlaylistRepository>()
-    private val topPlayedRepository by inject<TopPlayedRepository>()
+    private val songLocalRepository by inject<SongLocalDataRepository>()
+    private val albumLocalDataRepository by inject<AlbumLocalDataRepository>()
+    private val artistLocalDataRepository by inject<ArtistLocalDataRepository>()
+    private val genreLocalDataRepository by inject<GenreLocalDataRepository>()
+    private val playlistLocalDataRepository by inject<PlaylistLocalDataRepository>()
+    private val topPlayedLocalDataRepository by inject<TopPlayedLocalDataRepository>()
 
     override fun onPlayFromMediaId(mediaId: String?, extras: Bundle?) {
         super.onPlayFromMediaId(mediaId, extras)
@@ -58,32 +49,32 @@ class MediaSessionCallback(
         val songs: ArrayList<Song> = ArrayList()
         when (val category = AutoMediaIDHelper.extractCategory(mediaId)) {
             AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM -> {
-                val album: Album = albumRepository.album(itemId)
+                val album: Album = albumLocalDataRepository.album(itemId)
                 songs.addAll(album.songs)
                 musicService.openQueue(songs, 0, true)
             }
             AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST -> {
-                val artist: Artist = artistRepository.artist(itemId)
+                val artist: Artist = artistLocalDataRepository.artist(itemId)
                 songs.addAll(artist.songs)
                 musicService.openQueue(songs, 0, true)
             }
             AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM_ARTIST -> {
                 val artist: Artist =
-                    artistRepository.albumArtist(albumRepository.album(itemId).albumArtist!!)
+                    artistLocalDataRepository.albumArtist(albumLocalDataRepository.album(itemId).albumArtist!!)
                 songs.addAll(artist.songs)
                 musicService.openQueue(songs, 0, true)
             }
             AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_PLAYLIST -> {
-                val playlist: Playlist = playlistRepository.playlist(itemId)
+                val playlist: Playlist = playlistLocalDataRepository.playlist(itemId)
                 songs.addAll(playlist.getSongs())
                 musicService.openQueue(songs, 0, true)
             }
             AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_GENRE -> {
-                songs.addAll(genreRepository.songs(itemId))
+                songs.addAll(genreLocalDataRepository.songs(itemId))
                 musicService.openQueue(songs, 0, true)
             }
             AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_SHUFFLE -> {
-                val allSongs: ArrayList<Song> = songRepository.songs() as ArrayList<Song>
+                val allSongs: ArrayList<Song> = songLocalRepository.songs() as ArrayList<Song>
                 makeShuffleList(allSongs, -1)
                 musicService.openQueue(allSongs, 0, true)
             }
@@ -93,9 +84,9 @@ class MediaSessionCallback(
             AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_QUEUE,
             -> {
                 val tracks: List<Song> = when (category) {
-                    AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY -> topPlayedRepository.recentlyPlayedTracks()
-                    AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_SUGGESTIONS -> topPlayedRepository.recentlyPlayedTracks()
-                    AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS -> topPlayedRepository.recentlyPlayedTracks()
+                    AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_HISTORY -> topPlayedLocalDataRepository.recentlyPlayedTracks()
+                    AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_SUGGESTIONS -> topPlayedLocalDataRepository.recentlyPlayedTracks()
+                    AutoMediaIDHelper.MEDIA_ID_MUSICS_BY_TOP_TRACKS -> topPlayedLocalDataRepository.recentlyPlayedTracks()
                     else -> musicService.playingQueue
                 }
                 songs.addAll(tracks)
@@ -114,21 +105,21 @@ class MediaSessionCallback(
         if (query.isNullOrEmpty()) {
             // The user provided generic string e.g. 'Play music'
             // Build appropriate playlist queue
-            songs.addAll(songRepository.songs())
+            songs.addAll(songLocalRepository.songs())
         } else {
             // Build a queue based on songs that match "query" or "extras" param
             val mediaFocus: String? = extras?.getString(MediaStore.EXTRA_MEDIA_FOCUS)
             if (mediaFocus == MediaStore.Audio.Artists.ENTRY_CONTENT_TYPE) {
                 val artistQuery = extras.getString(MediaStore.EXTRA_MEDIA_ARTIST)
                 if (artistQuery != null) {
-                    artistRepository.artists(artistQuery).forEach {
+                    artistLocalDataRepository.artists(artistQuery).forEach {
                         songs.addAll(it.songs)
                     }
                 }
             } else if (mediaFocus == MediaStore.Audio.Albums.ENTRY_CONTENT_TYPE) {
                 val albumQuery = extras.getString(MediaStore.EXTRA_MEDIA_ALBUM)
                 if (albumQuery != null) {
-                    albumRepository.albums(albumQuery).forEach {
+                    albumLocalDataRepository.albums(albumQuery).forEach {
                         songs.addAll(it.songs)
                     }
                 }
@@ -138,7 +129,7 @@ class MediaSessionCallback(
         if (songs.isEmpty()) {
             // No focus found, search by query for song title
             query?.also {
-                songs.addAll(songRepository.songs(it))
+                songs.addAll(songLocalRepository.songs(it))
             }
         }
 

@@ -45,7 +45,7 @@ import java.util.StringTokenizer;
 import code.name.monkey.retromusic.Constants;
 import code.name.monkey.retromusic.adapter.Storage;
 import code.name.monkey.retromusic.model.Song;
-import code.name.monkey.retromusic.repository.RealSongRepository;
+import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealSongLocalDataRepositoryImpl;
 import code.name.monkey.retromusic.repository.SortedCursor;
 
 public final class FileUtil {
@@ -66,7 +66,7 @@ public final class FileUtil {
   @NonNull
   public static List<Song> matchFilesWithMediaStore(
       @NonNull Context context, @Nullable List<File> files) {
-    return new RealSongRepository(context).songs(makeSongCursor(context, files));
+    return new RealSongLocalDataRepositoryImpl(context).songs(makeSongCursor(context, files));
   }
 
   public static String safeGetCanonicalPath(File file) {
@@ -95,7 +95,7 @@ public final class FileUtil {
     }
 
     Cursor songCursor =
-        new RealSongRepository(context).makeSongCursor(selection, selection == null ? null : paths, PreferenceUtil.INSTANCE.getSongSortOrder(), true);
+        new RealSongLocalDataRepositoryImpl(context).makeSongCursor(selection, selection == null ? null : paths, PreferenceUtil.INSTANCE.getSongSortOrder(), true);
 
     return songCursor == null
         ? null

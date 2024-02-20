@@ -11,6 +11,6 @@ class LastAddedPlaylist : AbsSmartPlaylist(
     iconRes = R.drawable.ic_library_add
 ) {
     override fun songs(): List<Song> {
-        return lastAddedRepository.recentSongs()
+        return lastAddedLocalDataRepository.recentSongs()
     }
 }

@@ -25,7 +25,7 @@ import code.name.monkey.retromusic.model.Artist
 import code.name.monkey.retromusic.model.Song
 import code.name.monkey.retromusic.model.lyrics.AbsSynchronizedLyrics
 import code.name.monkey.retromusic.repository.Repository
-import code.name.monkey.retromusic.repository.SongRepository
+import code.name.monkey.retromusic.repository.dataSource.local.SongLocalDataRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
@@ -381,7 +381,7 @@ object MusicUtil : KoinComponent {
         safUris: List<Uri>?,
         callback: Runnable?,
     ) {
-        val songRepository: SongRepository = get()
+        val songLocalRepository: SongLocalDataRepository = get()
         val projection = arrayOf(
             BaseColumns._ID, Constants.DATA
         )
@@ -422,7 +422,7 @@ object MusicUtil : KoinComponent {
                     cursor.moveToFirst()
                     while (!cursor.isAfterLast) {
                         val id = cursor.getLong(BaseColumns._ID)
-                        val song: Song = songRepository.song(id)
+                        val song: Song = songLocalRepository.song(id)
                         removeFromQueue(song)
                         cursor.moveToNext()
                     }

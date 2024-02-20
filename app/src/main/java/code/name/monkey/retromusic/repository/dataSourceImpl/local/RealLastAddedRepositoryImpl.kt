@@ -12,31 +12,22 @@
  * See the GNU General Public License for more details.
  */
 
-package code.name.monkey.retromusic.repository
+package code.name.monkey.retromusic.repository.dataSourceImpl.local
 
 import android.database.Cursor
 import android.provider.MediaStore
 import code.name.monkey.retromusic.model.Album
 import code.name.monkey.retromusic.model.Artist
 import code.name.monkey.retromusic.model.Song
+import code.name.monkey.retromusic.repository.dataSource.local.LastAddedLocalDataRepository
 import code.name.monkey.retromusic.util.PreferenceUtil
 
-/**
- * Created by hemanths on 16/08/17.
- */
-interface LastAddedRepository {
-    fun recentSongs(): List<Song>
 
-    fun recentAlbums(): List<Album>
-
-    fun recentArtists(): List<Artist>
-}
-
-class RealLastAddedRepository(
-    private val songRepository: RealSongRepository,
-    private val albumRepository: RealAlbumRepository,
-    private val artistRepository: RealArtistRepository
-) : LastAddedRepository {
+class RealLastAddedRepositoryImpl(
+    private val songRepository: RealSongLocalDataRepositoryImpl,
+    private val albumRepository: RealAlbumLocalDataRepositoryImpl,
+    private val artistRepository: RealArtistLocalDataRepositoryImpl
+) : LastAddedLocalDataRepository {
     override fun recentSongs(): List<Song> {
         return songRepository.songs(makeLastAddedCursor())
     }

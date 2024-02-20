@@ -24,7 +24,7 @@ import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.db.toPlayCount
 import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.interfaces.IMusicServiceEventListener
-import code.name.monkey.retromusic.repository.RealRepository
+import code.name.monkey.retromusic.repository.RealRepositoryImpl
 import code.name.monkey.retromusic.service.MusicService.Companion.FAVORITE_STATE_CHANGED
 import code.name.monkey.retromusic.service.MusicService.Companion.MEDIA_STORE_CHANGED
 import code.name.monkey.retromusic.service.MusicService.Companion.META_CHANGED
@@ -42,7 +42,7 @@ import java.lang.ref.WeakReference
 abstract class AbsMusicServiceActivity : AbsBaseActivity(), IMusicServiceEventListener {
 
     private val mMusicServiceEventListeners = ArrayList<IMusicServiceEventListener>()
-    private val repository: RealRepository by inject()
+    private val repository: RealRepositoryImpl by inject()
     private var serviceToken: MusicPlayerRemote.ServiceToken? = null
     private var musicStateReceiver: MusicStateReceiver? = null
     private var receiverRegistered: Boolean = false

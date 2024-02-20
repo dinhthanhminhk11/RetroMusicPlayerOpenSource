@@ -54,7 +54,7 @@ import code.name.monkey.retromusic.fragments.player.PlayerAlbumCoverFragment
 import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.interfaces.IPaletteColorHolder
 import code.name.monkey.retromusic.model.Song
-import code.name.monkey.retromusic.repository.RealRepository
+import code.name.monkey.retromusic.repository.RealRepositoryImpl
 import code.name.monkey.retromusic.service.MusicService
 import code.name.monkey.retromusic.util.NavigationUtil
 import code.name.monkey.retromusic.util.PreferenceUtil
@@ -126,7 +126,7 @@ abstract class AbsPlayerFragment(@LayoutRes layout: Int) : AbsMusicServiceFragme
 
             R.id.action_add_to_playlist -> {
                 lifecycleScope.launch(IO) {
-                    val playlists = get<RealRepository>().fetchPlaylists()
+                    val playlists = get<RealRepositoryImpl>().fetchPlaylists()
                     withContext(Main) {
                         AddToPlaylistDialog.create(playlists, song)
                             .show(childFragmentManager, "ADD_PLAYLIST")

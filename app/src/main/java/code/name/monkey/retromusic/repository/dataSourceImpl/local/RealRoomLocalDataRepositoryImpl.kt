@@ -1,4 +1,4 @@
-package code.name.monkey.retromusic.repository
+package code.name.monkey.retromusic.repository.dataSourceImpl.local
 
 import android.content.Context
 import androidx.annotation.WorkerThread
@@ -10,48 +10,15 @@ import code.name.monkey.retromusic.helper.SortOrder.PlaylistSortOrder.Companion.
 import code.name.monkey.retromusic.helper.SortOrder.PlaylistSortOrder.Companion.PLAYLIST_SONG_COUNT_DESC
 import code.name.monkey.retromusic.helper.SortOrder.PlaylistSortOrder.Companion.PLAYLIST_Z_A
 import code.name.monkey.retromusic.model.Song
+import code.name.monkey.retromusic.repository.dataSource.local.RoomLocalDataRepository
 import code.name.monkey.retromusic.util.PreferenceUtil
 
 
-interface RoomRepository {
-    fun historySongs(): List<HistoryEntity>
-    fun favoritePlaylistLiveData(favorite: String): LiveData<List<SongEntity>>
-    fun observableHistorySongs(): LiveData<List<HistoryEntity>>
-    fun getSongs(playListId: Long): LiveData<List<SongEntity>>
-    suspend fun createPlaylist(playlistEntity: PlaylistEntity): Long
-    suspend fun checkPlaylistExists(playlistName: String): List<PlaylistEntity>
-    suspend fun playlists(): List<PlaylistEntity>
-    suspend fun playlistWithSongs(): List<PlaylistWithSongs>
-    suspend fun insertSongs(songs: List<SongEntity>)
-    suspend fun deletePlaylistEntities(playlistEntities: List<PlaylistEntity>)
-    suspend fun renamePlaylistEntity(playlistId: Long, name: String)
-    suspend fun deleteSongsInPlaylist(songs: List<SongEntity>)
-    suspend fun deletePlaylistSongs(playlists: List<PlaylistEntity>)
-    suspend fun favoritePlaylist(favorite: String): PlaylistEntity
-    suspend fun isFavoriteSong(songEntity: SongEntity): List<SongEntity>
-    suspend fun removeSongFromPlaylist(songEntity: SongEntity)
-    suspend fun addSongToHistory(currentSong: Song)
-    suspend fun songPresentInHistory(song: Song): HistoryEntity?
-    suspend fun updateHistorySong(song: Song)
-    suspend fun favoritePlaylistSongs(favorite: String): List<SongEntity>
-    suspend fun insertSongInPlayCount(playCountEntity: PlayCountEntity)
-    suspend fun updateSongInPlayCount(playCountEntity: PlayCountEntity)
-    suspend fun deleteSongInPlayCount(playCountEntity: PlayCountEntity)
-    suspend fun deleteSongInHistory(songId: Long)
-    suspend fun clearSongHistory()
-    suspend fun checkSongExistInPlayCount(songId: Long): List<PlayCountEntity>
-    suspend fun playCountSongs(): List<PlayCountEntity>
-    suspend fun deleteSongs(songs: List<Song>)
-    suspend fun isSongFavorite(context: Context, songId: Long): Boolean
-    fun checkPlaylistExists(playListId: Long): LiveData<Boolean>
-    fun getPlaylist(playlistId: Long): LiveData<PlaylistWithSongs>
-}
-
-class RealRoomRepository(
+class RealRoomLocalDataRepositoryImpl(
     private val playlistDao: PlaylistDao,
     private val playCountDao: PlayCountDao,
     private val historyDao: HistoryDao
-) : RoomRepository {
+) : RoomLocalDataRepository {
     @WorkerThread
     override suspend fun createPlaylist(playlistEntity: PlaylistEntity): Long =
         playlistDao.createPlaylist(playlistEntity)

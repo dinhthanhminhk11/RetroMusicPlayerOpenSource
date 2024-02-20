@@ -11,7 +11,7 @@ import code.name.monkey.retromusic.extensions.zipOutputStream
 import code.name.monkey.retromusic.helper.BackupContent.*
 import code.name.monkey.retromusic.model.Song
 import code.name.monkey.retromusic.repository.Repository
-import code.name.monkey.retromusic.repository.SongRepository
+import code.name.monkey.retromusic.repository.dataSource.local.SongLocalDataRepository
 import code.name.monkey.retromusic.util.getExternalStoragePublicDirectory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -26,7 +26,7 @@ import java.util.zip.ZipInputStream
 
 object BackupHelper : KoinComponent {
     private val repository by inject<Repository>()
-    private val songRepository by inject<SongRepository>()
+    private val songLocalRepository by inject<SongLocalDataRepository>()
 
     suspend fun createBackup(context: Context, name: String) {
         val backupFile =
@@ -198,7 +198,7 @@ object BackupHelper : KoinComponent {
         zipIn.bufferedReader().lineSequence().forEach { line ->
             if (line.startsWith(File.separator)) {
                 if (File(line).exists()) {
-                    songs.addAll(songRepository.songsByFilePath(line))
+                    songs.addAll(songLocalRepository.songsByFilePath(line))
                 }
             }
         }

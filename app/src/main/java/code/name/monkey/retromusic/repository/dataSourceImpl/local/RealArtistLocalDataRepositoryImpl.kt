@@ -12,34 +12,22 @@
  * See the GNU General Public License for more details.
  */
 
-package code.name.monkey.retromusic.repository
+package code.name.monkey.retromusic.repository.dataSourceImpl.local
 
 import android.provider.MediaStore.Audio.AudioColumns
 import code.name.monkey.retromusic.ALBUM_ARTIST
 import code.name.monkey.retromusic.helper.SortOrder
 import code.name.monkey.retromusic.model.Album
 import code.name.monkey.retromusic.model.Artist
+import code.name.monkey.retromusic.repository.dataSource.local.ArtistLocalDataRepository
 import code.name.monkey.retromusic.util.PreferenceUtil
 import java.text.Collator
 
-interface ArtistRepository {
-    fun artists(): List<Artist>
 
-    fun albumArtists(): List<Artist>
-
-    fun albumArtists(query: String): List<Artist>
-
-    fun artists(query: String): List<Artist>
-
-    fun artist(artistId: Long): Artist
-
-    fun albumArtist(artistName: String): Artist
-}
-
-class RealArtistRepository(
-    private val songRepository: RealSongRepository,
-    private val albumRepository: RealAlbumRepository
-) : ArtistRepository {
+class RealArtistLocalDataRepositoryImpl(
+    private val songRepository: RealSongLocalDataRepositoryImpl,
+    private val albumRepository: RealAlbumLocalDataRepositoryImpl
+) : ArtistLocalDataRepository {
 
     private fun getSongLoaderSortOrder(): String {
         return PreferenceUtil.artistSortOrder + ", " +

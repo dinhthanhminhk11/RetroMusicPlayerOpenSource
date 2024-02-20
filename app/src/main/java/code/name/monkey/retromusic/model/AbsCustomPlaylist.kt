@@ -1,8 +1,8 @@
 package code.name.monkey.retromusic.model
 
-import code.name.monkey.retromusic.repository.LastAddedRepository
-import code.name.monkey.retromusic.repository.SongRepository
-import code.name.monkey.retromusic.repository.TopPlayedRepository
+import code.name.monkey.retromusic.repository.dataSource.local.LastAddedLocalDataRepository
+import code.name.monkey.retromusic.repository.dataSource.local.SongLocalDataRepository
+import code.name.monkey.retromusic.repository.dataSource.local.TopPlayedLocalDataRepository
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -13,9 +13,9 @@ abstract class AbsCustomPlaylist(
 
     abstract fun songs(): List<Song>
 
-    protected val songRepository by inject<SongRepository>()
+    protected val songLocalRepository by inject<SongLocalDataRepository>()
 
-    protected val topPlayedRepository by inject<TopPlayedRepository>()
+    protected val topPlayedLocalDataRepository by inject<TopPlayedLocalDataRepository>()
 
-    protected val lastAddedRepository by inject<LastAddedRepository>()
+    protected val lastAddedLocalDataRepository by inject<LastAddedLocalDataRepository>()
 }

@@ -18,18 +18,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import code.name.monkey.retromusic.db.PlaylistWithSongs
 import code.name.monkey.retromusic.db.SongEntity
-import code.name.monkey.retromusic.model.Playlist
-import code.name.monkey.retromusic.repository.RealRepository
+import code.name.monkey.retromusic.repository.RealRepositoryImpl
 
 class PlaylistDetailsViewModel(
-    private val realRepository: RealRepository,
+    private val realRepositoryImpl: RealRepositoryImpl,
     private var playlistId: Long
 ) : ViewModel() {
     fun getSongs(): LiveData<List<SongEntity>> =
-        realRepository.playlistSongs(playlistId)
+        realRepositoryImpl.playlistSongs(playlistId)
 
     fun playlistExists(): LiveData<Boolean> =
-        realRepository.checkPlaylistExists(playlistId)
+        realRepositoryImpl.checkPlaylistExists(playlistId)
 
-    fun getPlaylist(): LiveData<PlaylistWithSongs> = realRepository.getPlaylist(playlistId)
+    fun getPlaylist(): LiveData<PlaylistWithSongs> = realRepositoryImpl.getPlaylist(playlistId)
 }
