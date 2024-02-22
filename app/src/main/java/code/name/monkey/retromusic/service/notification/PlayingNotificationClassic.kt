@@ -56,9 +56,9 @@ class PlayingNotificationClassic(
         )
         remoteViews.setTextViewText(
             R.id.appName,
-            context.getString(R.string.app_name) + " • " + song.albumName
+            "Madlife" + " • " + song.albumName
         )
-        remoteViews.setTextViewText(R.id.title, song.title)
+        remoteViews.setTextViewText(R.id.title, "okoko")
         remoteViews.setTextViewText(R.id.subtitle, song.artistName)
         linkButtons(remoteViews)
         return remoteViews

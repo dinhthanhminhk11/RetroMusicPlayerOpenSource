@@ -783,7 +783,7 @@ class MusicService : MediaBrowserServiceCompat(),
 
     @Synchronized
     fun play() {
-        playbackManager.play { playSongAt(getPosition()) }
+        playbackManager.play { playSongAt(getPosition()) } // set data chơi nhạc ở đây
         if (notHandledMetaChangedForCurrentTrack) {
             handleChangeInternal(META_CHANGED)
             notHandledMetaChangedForCurrentTrack = false

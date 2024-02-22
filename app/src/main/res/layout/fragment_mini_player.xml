@@ -72,7 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             app:trackCornerRadius="16dp"
-            tools:progress="10" />
+            tools:progress="40" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/miniPlayerPlayPauseButton"

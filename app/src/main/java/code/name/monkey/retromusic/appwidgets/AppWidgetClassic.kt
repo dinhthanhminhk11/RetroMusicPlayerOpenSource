@@ -61,7 +61,6 @@ class AppWidgetClassic : BaseAppWidget() {
         )
         appWidgetView.setImageViewBitmap(
             R.id.button_toggle_play_pause,
-
             context.getTintedDrawable(
                 R.drawable.ic_play_arrow_white_32dp,
                 MaterialValueHelper.getSecondaryTextColor(context, true)
