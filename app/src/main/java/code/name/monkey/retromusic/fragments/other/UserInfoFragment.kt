@@ -1,4 +1,3 @@
-
 package code.name.monkey.retromusic.fragments.other
 
 import android.app.Activity
@@ -16,12 +15,15 @@ import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import code.name.monkey.retromusic.Constants.USER_BANNER
 import code.name.monkey.retromusic.Constants.USER_PROFILE
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.databinding.FragmentUserInfoBinding
 import code.name.monkey.retromusic.extensions.accentColor
 import code.name.monkey.retromusic.extensions.applyToolbar
+import code.name.monkey.retromusic.extensions.fadeNavOptionsInOut
+import code.name.monkey.retromusic.extensions.findNavControllerOpen
 import code.name.monkey.retromusic.extensions.showToast
 import code.name.monkey.retromusic.fragments.LibraryViewModel
 import code.name.monkey.retromusic.glide.RetroGlideExtension
@@ -81,6 +83,12 @@ class UserInfoFragment : Fragment() {
             showBannerImageOptions()
         }
 
+        binding.login?.setOnClickListener {
+            findNavController().findNavControllerOpen(
+                R.id.loginFragment
+            )
+        }
+
         binding.next.setOnClickListener {
             val nameString = binding.name.text.toString().trim { it <= ' ' }
             if (nameString.isEmpty()) {
@@ -90,6 +98,8 @@ class UserInfoFragment : Fragment() {
             userName = nameString
             findNavController().navigateUp()
         }
+
+
 
         loadProfile()
         postponeEnterTransition()
@@ -116,10 +126,7 @@ class UserInfoFragment : Fragment() {
                         loadProfile()
                     }
                 }
-            }
-            .setNegativeButton(R.string.action_cancel, null)
-            .create()
-            .show()
+            }.setNegativeButton(R.string.action_cancel, null).create().show()
     }
 
     private fun showUserImageOptions() {
@@ -135,40 +142,28 @@ class UserInfoFragment : Fragment() {
                         loadProfile()
                     }
                 }
-            }
-            .setNegativeButton(R.string.action_cancel, null)
-            .create()
-            .show()
+            }.setNegativeButton(R.string.action_cancel, null).create().show()
     }
 
     private fun loadProfile() {
         binding.bannerImage.let {
-            Glide.with(this)
-                .load(RetroGlideExtension.getBannerModel())
-                .profileBannerOptions(RetroGlideExtension.getBannerModel())
-                .into(it)
+            Glide.with(this).load(RetroGlideExtension.getBannerModel())
+                .profileBannerOptions(RetroGlideExtension.getBannerModel()).into(it)
         }
-        Glide.with(this)
-            .load(RetroGlideExtension.getUserModel())
+        Glide.with(this).load(RetroGlideExtension.getUserModel())
             .userProfileOptions(RetroGlideExtension.getUserModel(), requireContext())
             .into(binding.userImage)
     }
 
     private fun selectBannerImage() {
-        ImagePicker.with(this)
-            .compress(1440)
-            .provider(ImageProvider.GALLERY)
-            .crop(16f, 9f)
+        ImagePicker.with(this).compress(1440).provider(ImageProvider.GALLERY).crop(16f, 9f)
             .createIntent {
                 startForBannerImageResult.launch(it)
             }
     }
 
     private fun pickNewPhoto() {
-        ImagePicker.with(this)
-            .provider(ImageProvider.GALLERY)
-            .cropSquare()
-            .compress(1440)
+        ImagePicker.with(this).provider(ImageProvider.GALLERY).cropSquare().compress(1440)
             .createIntent {
                 startForProfileImageResult.launch(it)
             }
@@ -209,10 +204,7 @@ class UserInfoFragment : Fragment() {
     }
 
     private fun setAndSaveBannerImage(fileUri: Uri) {
-        Glide.with(this)
-            .asBitmap()
-            .load(fileUri)
-            .diskCacheStrategy(DiskCacheStrategy.NONE)
+        Glide.with(this).asBitmap().load(fileUri).diskCacheStrategy(DiskCacheStrategy.NONE)
             .listener(object : RequestListener<Bitmap> {
                 override fun onResourceReady(
                     resource: Bitmap?,
@@ -233,8 +225,7 @@ class UserInfoFragment : Fragment() {
                 ): Boolean {
                     return false
                 }
-            })
-            .into(binding.bannerImage)
+            }).into(binding.bannerImage)
     }
 
     private fun saveImage(bitmap: Bitmap, fileName: String) {
@@ -255,10 +246,7 @@ class UserInfoFragment : Fragment() {
     }
 
     private fun setAndSaveUserImage(fileUri: Uri) {
-        Glide.with(this)
-            .asBitmap()
-            .load(fileUri)
-            .diskCacheStrategy(DiskCacheStrategy.NONE)
+        Glide.with(this).asBitmap().load(fileUri).diskCacheStrategy(DiskCacheStrategy.NONE)
             .listener(object : RequestListener<Bitmap> {
                 override fun onResourceReady(
                     resource: Bitmap?,
@@ -279,8 +267,7 @@ class UserInfoFragment : Fragment() {
                 ): Boolean {
                     return false
                 }
-            })
-            .into(binding.userImage)
+            }).into(binding.userImage)
     }
 
     override fun onDestroyView() {
