@@ -18,6 +18,7 @@ import code.name.monkey.retromusic.db.PlaylistWithSongs
 import code.name.monkey.retromusic.db.SongEntity
 import code.name.monkey.retromusic.db.fromHistoryToSongs
 import code.name.monkey.retromusic.db.toSong
+import code.name.monkey.retromusic.extensions.responseToResource
 import code.name.monkey.retromusic.fragments.search.Filter
 import code.name.monkey.retromusic.model.AbsCustomPlaylist
 import code.name.monkey.retromusic.model.Album
@@ -27,6 +28,8 @@ import code.name.monkey.retromusic.model.Genre
 import code.name.monkey.retromusic.model.Home
 import code.name.monkey.retromusic.model.Playlist
 import code.name.monkey.retromusic.model.Song
+import code.name.monkey.retromusic.model.request.BodyRequest
+import code.name.monkey.retromusic.model.response.LoginResponse
 import code.name.monkey.retromusic.model.smartplaylist.NotPlayedPlaylist
 import code.name.monkey.retromusic.network.LastFMService
 import code.name.monkey.retromusic.network.Result
@@ -43,8 +46,10 @@ import code.name.monkey.retromusic.repository.dataSource.local.PlaylistLocalData
 import code.name.monkey.retromusic.repository.dataSource.local.RoomLocalDataRepository
 import code.name.monkey.retromusic.repository.dataSource.local.SongLocalDataRepository
 import code.name.monkey.retromusic.repository.dataSource.local.TopPlayedLocalDataRepository
+import code.name.monkey.retromusic.repository.dataSource.network.LoginRemoteDataSource
 import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealSearchRepositoryImpl
 import code.name.monkey.retromusic.util.logE
+import retrofit2.Response
 
 class RealRepositoryImpl(
     private val context: Context,
@@ -59,15 +64,18 @@ class RealRepositoryImpl(
     private val topPlayedLocalDataRepository: TopPlayedLocalDataRepository,
     private val roomLocalDataRepository: RoomLocalDataRepository,
     private val localDataRepository: LocalDataRepository,
+    private val loginRemoteDataSource: LoginRemoteDataSource
 ) : Repository {
 
     override suspend fun deleteSongs(songs: List<Song>) = roomLocalDataRepository.deleteSongs(songs)
 
     override suspend fun contributor(): List<Contributor> = localDataRepository.contributors()
 
-    override suspend fun searchSongs(query: String): List<Song> = songLocalDataRepository.songs(query)
+    override suspend fun searchSongs(query: String): List<Song> =
+        songLocalDataRepository.songs(query)
 
-    override suspend fun searchAlbums(query: String): List<Album> = albumLocalDataRepository.albums(query)
+    override suspend fun searchAlbums(query: String): List<Album> =
+        albumLocalDataRepository.albums(query)
 
     override suspend fun isSongFavorite(songId: Long): Boolean =
         roomLocalDataRepository.isSongFavorite(context, songId)
@@ -79,7 +87,8 @@ class RealRepositoryImpl(
 
     override suspend fun fetchAlbums(): List<Album> = albumLocalDataRepository.albums()
 
-    override suspend fun albumByIdAsync(albumId: Long): Album = albumLocalDataRepository.album(albumId)
+    override suspend fun albumByIdAsync(albumId: Long): Album =
+        albumLocalDataRepository.album(albumId)
 
     override fun albumById(albumId: Long): Album = albumLocalDataRepository.album(albumId)
 
@@ -87,12 +96,14 @@ class RealRepositoryImpl(
 
     override suspend fun albumArtists(): List<Artist> = artistLocalDataRepository.albumArtists()
 
-    override suspend fun artistById(artistId: Long): Artist = artistLocalDataRepository.artist(artistId)
+    override suspend fun artistById(artistId: Long): Artist =
+        artistLocalDataRepository.artist(artistId)
 
     override suspend fun albumArtistByName(name: String): Artist =
         artistLocalDataRepository.albumArtist(name)
 
-    override suspend fun recentArtists(): List<Artist> = lastAddedLocalDataRepository.recentArtists()
+    override suspend fun recentArtists(): List<Artist> =
+        lastAddedLocalDataRepository.recentArtists()
 
     override suspend fun recentAlbums(): List<Album> = lastAddedLocalDataRepository.recentAlbums()
 
@@ -100,7 +111,8 @@ class RealRepositoryImpl(
 
     override suspend fun topAlbums(): List<Album> = topPlayedLocalDataRepository.topAlbums()
 
-    override suspend fun fetchLegacyPlaylist(): List<Playlist> = playlistLocalDataRepository.playlists()
+    override suspend fun fetchLegacyPlaylist(): List<Playlist> =
+        playlistLocalDataRepository.playlists()
 
     override suspend fun fetchGenres(): List<Genre> = genreLocalDataRepository.genres()
 
@@ -116,7 +128,8 @@ class RealRepositoryImpl(
             PlaylistSongsLoader.getPlaylistSongList(context, playlist.id)
         }
 
-    override suspend fun getGenre(genreId: Long): List<Song> = genreLocalDataRepository.songs(genreId)
+    override suspend fun getGenre(genreId: Long): List<Song> =
+        genreLocalDataRepository.songs(genreId)
 
     override suspend fun artistInfo(
         name: String,
@@ -171,6 +184,10 @@ class RealRepositoryImpl(
     override fun getPlaylist(playlistId: Long): LiveData<PlaylistWithSongs> =
         roomLocalDataRepository.getPlaylist(playlistId)
 
+    override suspend fun getUser(bodyRequest: BodyRequest): Result<LoginResponse> {
+        return responseToResource(loginRemoteDataSource.getUser(bodyRequest))
+    }
+
     override suspend fun playlistSongs(playlistWithSongs: PlaylistWithSongs): List<Song> =
         playlistWithSongs.songs.map {
             it.toSong()
@@ -191,7 +208,8 @@ class RealRepositoryImpl(
     override suspend fun createPlaylist(playlistEntity: PlaylistEntity): Long =
         roomLocalDataRepository.createPlaylist(playlistEntity)
 
-    override suspend fun fetchPlaylists(): List<PlaylistEntity> = roomLocalDataRepository.playlists()
+    override suspend fun fetchPlaylists(): List<PlaylistEntity> =
+        roomLocalDataRepository.playlists()
 
     override suspend fun deleteRoomPlaylist(playlists: List<PlaylistEntity>) =
         roomLocalDataRepository.deletePlaylistEntities(playlists)
@@ -295,7 +313,8 @@ class RealRepositoryImpl(
     }
 
     override suspend fun topArtistsHome(): Home {
-        val artists = topPlayedLocalDataRepository.topArtists().take(5) // lấy ra 5 phần tử lưu vào list
+        val artists =
+            topPlayedLocalDataRepository.topArtists().take(5) // lấy ra 5 phần tử lưu vào list
         return Home(artists, TOP_ARTISTS, R.string.top_artists)
     }
 

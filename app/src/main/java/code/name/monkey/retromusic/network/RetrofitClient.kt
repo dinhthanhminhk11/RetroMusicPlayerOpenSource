@@ -11,6 +11,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 import java.io.File
 import java.util.concurrent.TimeUnit
 
@@ -69,6 +70,21 @@ fun provideLastFmRetrofit(client: OkHttpClient): Retrofit {
 
 fun provideLastFmRest(retrofit: Retrofit): LastFMService {
     return retrofit.create(LastFMService::class.java)
+}
+
+fun provideNewApiRetrofit(client: OkHttpClient): Retrofit {
+    val gson = GsonBuilder()
+        .setLenient()
+        .create()
+    return Retrofit.Builder()
+        .baseUrl("http://192.168.28.139:3000/api/")
+        .addConverterFactory(GsonConverterFactory.create(gson))
+        .callFactory { request -> client.newCall(request) }
+        .build()
+}
+
+fun provideLoginService(retrofit: Retrofit): LoginService {
+    return retrofit.create(LoginService::class.java)
 }
 
 fun provideDeezerRest(retrofit: Retrofit): DeezerService {

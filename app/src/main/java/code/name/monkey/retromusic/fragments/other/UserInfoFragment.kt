@@ -110,6 +110,9 @@ class UserInfoFragment : Fragment() {
             binding.next.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 bottomMargin = it
             }
+            binding.login?.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                bottomMargin = it
+            }
         }
     }
 

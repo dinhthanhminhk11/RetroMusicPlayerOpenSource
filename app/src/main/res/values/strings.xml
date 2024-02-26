@@ -564,4 +564,9 @@
     <string name="your_account_data_is_only_used_for_authentication">Your account data is only used for authentication.</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="enterMail">Xin vui lòng nhập địa chỉ Email</string>
+    <string name="enterPass">Xin vui lòng nhập địa chỉ Password</string>
+    <string name="enterMailFaild">Địa chỉ Email không đúng</string>
 </resources>

@@ -15,9 +15,12 @@ import code.name.monkey.retromusic.model.Genre
 import code.name.monkey.retromusic.model.Home
 import code.name.monkey.retromusic.model.Playlist
 import code.name.monkey.retromusic.model.Song
+import code.name.monkey.retromusic.model.request.BodyRequest
+import code.name.monkey.retromusic.model.response.LoginResponse
 import code.name.monkey.retromusic.network.Result
 import code.name.monkey.retromusic.network.model.LastFmAlbum
 import code.name.monkey.retromusic.network.model.LastFmArtist
+import retrofit2.Response
 
 interface Repository {
     fun historySong(): List<HistoryEntity>
@@ -88,4 +91,5 @@ interface Repository {
     fun getSongByGenre(genreId: Long): Song
     fun checkPlaylistExists(playListId: Long): LiveData<Boolean>
     fun getPlaylist(playlistId: Long): LiveData<PlaylistWithSongs>
+    suspend fun getUser(bodyRequest: BodyRequest): Result<LoginResponse>
 }

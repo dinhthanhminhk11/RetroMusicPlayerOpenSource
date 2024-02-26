@@ -9,11 +9,14 @@ import code.name.monkey.retromusic.fragments.LibraryViewModel
 import code.name.monkey.retromusic.fragments.albums.AlbumDetailsViewModel
 import code.name.monkey.retromusic.fragments.artists.ArtistDetailsViewModel
 import code.name.monkey.retromusic.fragments.genres.GenreDetailsViewModel
+import code.name.monkey.retromusic.fragments.login.LoginViewModel
 import code.name.monkey.retromusic.fragments.playlists.PlaylistDetailsViewModel
 import code.name.monkey.retromusic.model.Genre
 import code.name.monkey.retromusic.network.provideDefaultCache
 import code.name.monkey.retromusic.network.provideLastFmRest
 import code.name.monkey.retromusic.network.provideLastFmRetrofit
+import code.name.monkey.retromusic.network.provideLoginService
+import code.name.monkey.retromusic.network.provideNewApiRetrofit
 import code.name.monkey.retromusic.network.provideOkHttp
 import code.name.monkey.retromusic.repository.*
 import code.name.monkey.retromusic.repository.dataSource.local.AlbumLocalDataRepository
@@ -25,6 +28,7 @@ import code.name.monkey.retromusic.repository.dataSource.local.PlaylistLocalData
 import code.name.monkey.retromusic.repository.dataSource.local.RoomLocalDataRepository
 import code.name.monkey.retromusic.repository.dataSource.local.SongLocalDataRepository
 import code.name.monkey.retromusic.repository.dataSource.local.TopPlayedLocalDataRepository
+import code.name.monkey.retromusic.repository.dataSource.network.LoginRemoteDataSource
 import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealAlbumLocalDataRepositoryImpl
 import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealArtistLocalDataRepositoryImpl
 import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealGenreLocalDataRepositoryImpl
@@ -35,6 +39,7 @@ import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealRoomLocal
 import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealSearchRepositoryImpl
 import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealSongLocalDataRepositoryImpl
 import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealTopPlayedLocalDataRepositoryImpl
+import code.name.monkey.retromusic.repository.dataSourceImpl.network.LoginRemoteDataSourceImpl
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.bind
@@ -52,6 +57,15 @@ val networkModule = module {
     }
     single {
         provideLastFmRest(get())
+    }
+}
+
+val networkModelNewApi = module {
+    single {
+        provideNewApiRetrofit(get())
+    }
+    single {
+        provideLoginService(get())
     }
 }
 
@@ -114,6 +128,7 @@ private val dataModule = module {
             get(),
             get(),
             get(),
+            get()
         )
     } bind Repository::class
 
@@ -161,6 +176,10 @@ private val dataModule = module {
     single {
         RealLocalDataRepositoryImpl(get())
     } bind LocalDataRepository::class
+
+    single {
+        LoginRemoteDataSourceImpl(get())
+    } bind LoginRemoteDataSource::class
 }
 
 private val viewModules = module {
@@ -197,6 +216,20 @@ private val viewModules = module {
             genre
         )
     }
+
+    viewModel {
+        LoginViewModel(
+            get()
+        )
+    }
 }
 
-val appModules = listOf(mainModule, dataModule, autoModule, viewModules, networkModule, roomModule)
+val appModules = listOf(
+    mainModule,
+    dataModule,
+    autoModule,
+    viewModules,
+    networkModule,
+    roomModule,
+    networkModelNewApi
+)

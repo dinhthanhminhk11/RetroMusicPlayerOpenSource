@@ -1,31 +1,125 @@
 package code.name.monkey.retromusic.fragments.login
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import code.name.monkey.appthemehelper.ThemeStore
 import code.name.monkey.appthemehelper.util.VersionUtils
+import code.name.monkey.retromusic.App
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.appshortcuts.DynamicShortcutManager
 import code.name.monkey.retromusic.databinding.FragmentLoginBinding
-import code.name.monkey.retromusic.databinding.FragmentSettingsBinding
+import code.name.monkey.retromusic.encryption.AESUtil
+import code.name.monkey.retromusic.encryption.RESTUtil
+import code.name.monkey.retromusic.encryption.RSAUtil
 import code.name.monkey.retromusic.extensions.applyToolbar
-import code.name.monkey.retromusic.extensions.findNavController
+import code.name.monkey.retromusic.extensions.isValidEmail
+import code.name.monkey.retromusic.model.request.BodyRequest
+import code.name.monkey.retromusic.network.Result
+import code.name.monkey.retromusic.util.PreferenceUtil.userName
+import code.name.monkey.retromusic.util.extention.showToastError
+import code.name.monkey.retromusic.util.extention.showToastSuccess
+import code.name.monkey.retromusic.util.logD
+import code.name.monkey.retromusic.util.logE
+import code.name.monkey.retromusic.views.toast.CookieBar
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.color.ColorCallback
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
+import org.koin.core.component.getScopeId
 
 
-class LoginFragment : Fragment(R.layout.fragment_login) , ColorCallback{
-    private var _binding: FragmentLoginBinding? = null
+class LoginFragment : Fragment(R.layout.fragment_login), ColorCallback {
+    private var _binding: LoginBinding? = null
     private val binding get() = _binding!!
+    private val loginViewModel by activityViewModel<LoginViewModel>()
 
+    @SuppressLint("UseRequireInsteadOfGet")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentLoginBinding.bind(view)
+        val loginBinding = FragmentLoginBinding.bind(view)
+        _binding = LoginBinding(loginBinding)
         applyToolbar(binding.toolbar)
+
+        binding.password.setText("m01675784487")
+        binding.userName.setText("minhk11642002@gmail.com")
+        binding.login.setOnClickListener {
+            if (binding.userName.text!!.isEmpty()) {
+                showToastError(
+                    activity!!, getString(R.string.notification),
+                    getString(R.string.enterMail)
+                )
+            } else if (!isValidEmail(binding.userName.text.toString())) {
+                showToastError(
+                    activity!!, getString(R.string.notification),
+                    getString(R.string.enterMailFaild)
+                )
+            } else if (binding.password.text!!.isEmpty()) {
+                showToastError(
+                    activity!!, getString(R.string.notification),
+                    getString(R.string.enterPass)
+                )
+            } else {
+                loginViewModel.login(
+                    BodyRequest(
+                        "key",
+                        RSAUtil.encrypt(
+                            App.getContext().getServerSecret().aesKey,
+                            App.getContext().getServerSecret().publicKey
+                        ),
+                        "iv",
+                        RSAUtil.encrypt(
+                            App.getContext().getServerSecret().aesIV,
+                            App.getContext().getServerSecret().publicKey
+                        ),
+                        "body",
+                        AESUtil.encrypt(
+                            BodyRequest(
+                                "username", "${binding.userName.text}",
+                                "password", "${binding.password.text}"
+                            ).toString(),
+                            App.getContext().getServerSecret().aesKey,
+                            App.getContext().getServerSecret().aesIV
+                        )
+                    )
+                ).observe(viewLifecycleOwner) { result ->
+                    when (result) {
+                        is Result.Loading -> {
+                            logD("Loading")
+                            isLoaded(true)
+                        }
+
+                        is Result.Error -> {
+                            logE("Error")
+                            isLoaded(false)
+                            showToastError(activity!!, getString(R.string.notification), "Error")
+                        }
+
+                        is Result.Success -> {
+                            isLoaded(false)
+                            if (result.data.message.status) {
+                                showToastSuccess(
+                                    activity!!,
+                                    getString(R.string.notification),
+                                    result.data.message.message
+                                )
+                                findNavController().popBackStack()
+                            } else {
+                                showToastError(
+                                    activity!!, getString(R.string.notification),
+                                    result.data.message.message
+                                )
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     override fun invoke(dialog: MaterialDialog, color: Int) {
@@ -33,6 +127,16 @@ class LoginFragment : Fragment(R.layout.fragment_login) , ColorCallback{
         if (VersionUtils.hasNougatMR())
             DynamicShortcutManager(requireContext()).updateDynamicShortcuts()
         activity?.recreate()
+    }
+
+    private fun isLoaded(checkLoad: Boolean) {
+        if (checkLoad) {
+            binding.login.isEnabled = false
+            binding.progressBar.visibility = View.VISIBLE
+        } else {
+            binding.login.isEnabled = true
+            binding.progressBar.visibility = View.GONE
+        }
     }
 
 }
