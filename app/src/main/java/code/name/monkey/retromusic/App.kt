@@ -15,6 +15,7 @@ import code.name.monkey.retromusic.activities.MainActivity
 import code.name.monkey.retromusic.appshortcuts.DynamicShortcutManager
 import code.name.monkey.retromusic.billing.BillingManager
 import code.name.monkey.retromusic.encryption.AESUtil
+import code.name.monkey.retromusic.encryption.Key
 import code.name.monkey.retromusic.encryption.RESTUtil
 import code.name.monkey.retromusic.encryption.Secret
 import code.name.monkey.retromusic.helper.WallpaperAccentManager
@@ -66,6 +67,7 @@ class App : Application() {
 
         var serverPublicKey: PublicKey? = null
         try {
+            val key = Key()
             val pemString = "-----BEGIN PUBLIC KEY-----\n" +
                     "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2tlHxvCIVkAGrJMFQVn/\n" +
                     "TGUAiw6bKNWecxnTpKAYy//HjnhOVVDBqctWPYMfSiY8pGLLWWfxXduXXr3MOGtd\n" +
@@ -76,7 +78,7 @@ class App : Application() {
                     "QQIDAQAB\n" +
                     "-----END PUBLIC KEY-----"
 
-            val publicKey: PublicKey = getPublicKeyFromPEM(pemString)
+            val publicKey: PublicKey = getPublicKeyFromPEM(key.stringFromJNI())
             serverPublicKey = publicKey
             Log.e("MInh read file", serverPublicKey.toString())
         } catch (e: Exception) {
