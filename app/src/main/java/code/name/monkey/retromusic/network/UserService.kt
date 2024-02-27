@@ -12,6 +12,9 @@ interface UserService {
     @POST("auth/login")
     suspend fun login(@Body bodyRequest: BodyRequest): Response<LoginResponse>
 
+    @POST("auth/register")
+    suspend fun register(@Body bodyRequest: BodyRequest): Response<LoginResponse>
+
     @GET("auth/getUserByToken")
     suspend fun getUserByToken(@Header("x-access-token") token: String): LoginResponse
 }

@@ -19,6 +19,7 @@
     <color name="lighterColorSurface">#dddddd</color>
 
     <color name="blackColorSurface">#000000</color>
+    <color name="color_gray_C7">#C7C7C7</color>
 
     <color name="transparent">#00000000</color>
     <color name="semi_transparent">#20000000</color>

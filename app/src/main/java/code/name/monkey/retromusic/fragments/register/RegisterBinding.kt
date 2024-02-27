@@ -13,4 +13,7 @@ class RegisterBinding(binding: FragmentRegisterBinding) {
     val password = binding.password
     val passwordAgain = binding.passwordAgain
     val toolbar = binding.toolbar
+    val name = binding.name
+    val nameContainer = binding.nameContainer
+    val progressBar = binding.progressBar
 }

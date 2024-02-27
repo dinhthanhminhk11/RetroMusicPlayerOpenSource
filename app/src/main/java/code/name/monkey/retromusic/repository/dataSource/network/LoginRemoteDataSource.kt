@@ -6,5 +6,6 @@ import retrofit2.Response
 
 interface LoginRemoteDataSource {
     suspend fun getUser(bodyRequest: BodyRequest): Response<LoginResponse>
+    suspend fun register(bodyRequest: BodyRequest): Response<LoginResponse>
     suspend fun getUserByToken(token: String): LoginResponse
 }

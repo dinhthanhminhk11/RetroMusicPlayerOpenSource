@@ -574,4 +574,5 @@
     <string name="email">Email</string>
     <string name="passwordAgain">Nhập lại mật khẩu</string>
     <string name="logout">Đăng xuất</string>
+    <string name="name">Họ và tên</string>
 </resources>

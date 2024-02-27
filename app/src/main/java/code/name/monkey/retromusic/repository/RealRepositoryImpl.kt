@@ -188,6 +188,10 @@ class RealRepositoryImpl(
         return responseToResource(loginRemoteDataSource.getUser(bodyRequest))
     }
 
+    override suspend fun register(bodyRequest: BodyRequest): Result<LoginResponse> {
+        return responseToResource(loginRemoteDataSource.register(bodyRequest))
+    }
+
     override suspend fun getUserByToken(token: String): LoginResponse {
         return loginRemoteDataSource.getUserByToken(token)
     }

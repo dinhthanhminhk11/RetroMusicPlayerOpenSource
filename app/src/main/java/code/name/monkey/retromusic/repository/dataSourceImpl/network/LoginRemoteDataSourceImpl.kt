@@ -11,6 +11,9 @@ class LoginRemoteDataSourceImpl(private val userService: UserService) : LoginRem
         return userService.login(bodyRequest)
     }
 
+    override suspend fun register(bodyRequest: BodyRequest): Response<LoginResponse> =
+        userService.register(bodyRequest)
+
     override suspend fun getUserByToken(token: String): LoginResponse =
         userService.getUserByToken(token)
 }
