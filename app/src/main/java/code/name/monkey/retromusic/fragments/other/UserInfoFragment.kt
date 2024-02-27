@@ -29,6 +29,7 @@ import code.name.monkey.retromusic.fragments.LibraryViewModel
 import code.name.monkey.retromusic.glide.RetroGlideExtension
 import code.name.monkey.retromusic.glide.RetroGlideExtension.profileBannerOptions
 import code.name.monkey.retromusic.glide.RetroGlideExtension.userProfileOptions
+import code.name.monkey.retromusic.model.user.UserClient
 import code.name.monkey.retromusic.util.ImageUtil
 import code.name.monkey.retromusic.util.PreferenceUtil.userName
 import com.bumptech.glide.Glide
@@ -73,7 +74,6 @@ class UserInfoFragment : Fragment() {
 
         binding.nameContainer.accentColor()
         binding.next.accentColor()
-        binding.name.setText(userName)
 
         binding.userImage.setOnClickListener {
             showUserImageOptions()
@@ -114,6 +114,13 @@ class UserInfoFragment : Fragment() {
                 bottomMargin = it
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.name.setText(UserClient.name)
+        binding.phone?.setText(UserClient.phone )
+        binding.email?.setText(UserClient.email)
     }
 
     private fun showBannerImageOptions() {

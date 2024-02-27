@@ -1,4 +1,3 @@
-
 package code.name.monkey.retromusic.fragments
 
 import android.animation.ValueAnimator
@@ -13,10 +12,12 @@ import code.name.monkey.retromusic.fragments.search.Filter
 import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.interfaces.IMusicServiceEventListener
 import code.name.monkey.retromusic.model.*
+import code.name.monkey.retromusic.model.response.LoginResponse
 import code.name.monkey.retromusic.repository.RealRepositoryImpl
 import code.name.monkey.retromusic.util.DensityUtil
 import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.logD
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
@@ -100,6 +101,16 @@ class LibraryViewModel(
     private suspend fun fetchHomeSections() {
         home.postValue(repository.homeSections())
     }
+
+    fun loginByToken(token: String): LiveData<LoginResponse> =
+        liveData(Dispatchers.IO) {
+            try {
+                val loginResponse = repository.getUserByToken(token)
+                emit(loginResponse)
+            } catch (e: Exception) {
+
+            }
+        }
 
     private suspend fun fetchSuggestions() {
         suggestions.postValue(repository.suggestions())
@@ -320,8 +331,12 @@ class LibraryViewModel(
                     createPlaylist(PlaylistEntity(playlistName = playlistName))
                 insertSongs(songs.map { it.toSongEntity(playlistId) })
                 withContext(Main) {
-                    context.showToast(context.getString(R.string.playlist_created_sucessfully,
-                        playlistName))
+                    context.showToast(
+                        context.getString(
+                            R.string.playlist_created_sucessfully,
+                            playlistName
+                        )
+                    )
                 }
             } else {
                 val playlist = playlists.firstOrNull()
@@ -337,7 +352,9 @@ class LibraryViewModel(
                     context.getString(
                         R.string.added_song_count_to_playlist,
                         songs.size,
-                        playlistName))
+                        playlistName
+                    )
+                )
             }
         }
     }

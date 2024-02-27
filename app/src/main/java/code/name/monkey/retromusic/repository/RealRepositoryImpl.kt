@@ -188,6 +188,10 @@ class RealRepositoryImpl(
         return responseToResource(loginRemoteDataSource.getUser(bodyRequest))
     }
 
+    override suspend fun getUserByToken(token: String): LoginResponse {
+        return loginRemoteDataSource.getUserByToken(token)
+    }
+
     override suspend fun playlistSongs(playlistWithSongs: PlaylistWithSongs): List<Song> =
         playlistWithSongs.songs.map {
             it.toSong()

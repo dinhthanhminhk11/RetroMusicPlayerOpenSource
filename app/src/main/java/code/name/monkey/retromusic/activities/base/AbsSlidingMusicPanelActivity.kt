@@ -1,4 +1,3 @@
-
 package code.name.monkey.retromusic.activities.base
 
 import android.animation.ArgbEvaluator
@@ -85,6 +84,10 @@ import code.name.monkey.retromusic.fragments.player.tiny.TinyPlayerFragment
 import code.name.monkey.retromusic.fragments.queue.PlayingQueueFragment
 import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.model.CategoryInfo
+import code.name.monkey.retromusic.model.user.User
+import code.name.monkey.retromusic.model.user.UserClient
+import code.name.monkey.retromusic.util.AppConstant
+import code.name.monkey.retromusic.util.MySharedPreferences
 import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.ViewUtil
 import code.name.monkey.retromusic.util.logD
@@ -193,6 +196,7 @@ abstract class AbsSlidingMusicPanelActivity : AbsMusicServiceActivity(),
         setupSlidingUpPanel()
         setupBottomSheet()
         updateColor()
+        loginByToken()
         if (!PreferenceUtil.materialYou) {
             binding.slidingPanel.backgroundTintList = ColorStateList.valueOf(darkAccentColor())
             navigationView.backgroundTintList = ColorStateList.valueOf(darkAccentColor())
@@ -458,6 +462,24 @@ abstract class AbsSlidingMusicPanelActivity : AbsMusicServiceActivity(),
         libraryViewModel.paletteColor.observe(this) { color ->
             this.paletteColor = color
             onPaletteColorChanged()
+        }
+    }
+
+    private fun loginByToken() {
+        val token = MySharedPreferences.getInstance(this)
+            .getString(AppConstant.TOKEN_USER, "")
+        if (!token.isNullOrEmpty()) {
+            libraryViewModel.loginByToken(token).observe(this) { result ->
+                UserClient.setUserFromUser(
+                    User(
+                        _id = result.data._id,
+                        fullName = result.data.fullName,
+                        email = result.data.email,
+                        phone = result.data.phone,
+                        image = result.data.image
+                    )
+                )
+            }
         }
     }
 

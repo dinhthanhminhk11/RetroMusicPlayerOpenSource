@@ -68,16 +68,6 @@ class App : Application() {
         var serverPublicKey: PublicKey? = null
         try {
             val key = Key()
-            val pemString = "-----BEGIN PUBLIC KEY-----\n" +
-                    "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2tlHxvCIVkAGrJMFQVn/\n" +
-                    "TGUAiw6bKNWecxnTpKAYy//HjnhOVVDBqctWPYMfSiY8pGLLWWfxXduXXr3MOGtd\n" +
-                    "YmyAxyGtbB2lyjzAtQe6uNdORwuhpQzx54UyhU5ggOyvBtDxL3HtwREWWTco0r0h\n" +
-                    "w9XyRFXt4yQAI/QMW1edl1vkUglGK2GFIA3OM5DMGESGFCgeaiJxQa0GCu9WyJYJ\n" +
-                    "/1GBzGGCSNJetaW+FluM8zH0vbWjTs+D/TmSuvrdPqCPXNjRJ7lDO4tfJgkZh1CP\n" +
-                    "Ei+w1mnkg/aq9gKne4J2r4iRTLxm0MAUJNTjSRr2exy0YVfCjk6Z4turg3omgzJG\n" +
-                    "QQIDAQAB\n" +
-                    "-----END PUBLIC KEY-----"
-
             val publicKey: PublicKey = getPublicKeyFromPEM(key.stringFromJNI())
             serverPublicKey = publicKey
             Log.e("MInh read file", serverPublicKey.toString())

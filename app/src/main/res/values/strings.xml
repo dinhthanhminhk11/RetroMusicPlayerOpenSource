@@ -569,4 +569,8 @@
     <string name="enterMail">Xin vui lòng nhập địa chỉ Email</string>
     <string name="enterPass">Xin vui lòng nhập địa chỉ Password</string>
     <string name="enterMailFaild">Địa chỉ Email không đúng</string>
+    <string name="register">Đăng ký</string>
+    <string name="phone">Số điện thoại</string>
+    <string name="email">Email</string>
+    <string name="passwordAgain">Nhập lại mật khẩu</string>
 </resources>

@@ -92,4 +92,5 @@ interface Repository {
     fun checkPlaylistExists(playListId: Long): LiveData<Boolean>
     fun getPlaylist(playlistId: Long): LiveData<PlaylistWithSongs>
     suspend fun getUser(bodyRequest: BodyRequest): Result<LoginResponse>
+    suspend fun getUserByToken(token: String): LoginResponse
 }

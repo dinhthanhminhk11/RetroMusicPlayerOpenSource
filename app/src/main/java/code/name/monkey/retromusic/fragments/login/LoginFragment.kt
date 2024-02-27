@@ -2,9 +2,7 @@ package code.name.monkey.retromusic.fragments.login
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import code.name.monkey.appthemehelper.ThemeStore
@@ -14,22 +12,24 @@ import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.appshortcuts.DynamicShortcutManager
 import code.name.monkey.retromusic.databinding.FragmentLoginBinding
 import code.name.monkey.retromusic.encryption.AESUtil
-import code.name.monkey.retromusic.encryption.RESTUtil
 import code.name.monkey.retromusic.encryption.RSAUtil
 import code.name.monkey.retromusic.extensions.applyToolbar
+import code.name.monkey.retromusic.extensions.findNavControllerOpen
 import code.name.monkey.retromusic.extensions.isValidEmail
 import code.name.monkey.retromusic.model.request.BodyRequest
+import code.name.monkey.retromusic.model.user.User
+import code.name.monkey.retromusic.model.user.UserClient
+import code.name.monkey.retromusic.model.user.UserClient.phone
 import code.name.monkey.retromusic.network.Result
-import code.name.monkey.retromusic.util.PreferenceUtil.userName
+import code.name.monkey.retromusic.util.AppConstant
+import code.name.monkey.retromusic.util.MySharedPreferences
 import code.name.monkey.retromusic.util.extention.showToastError
 import code.name.monkey.retromusic.util.extention.showToastSuccess
 import code.name.monkey.retromusic.util.logD
 import code.name.monkey.retromusic.util.logE
-import code.name.monkey.retromusic.views.toast.CookieBar
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.color.ColorCallback
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
-import org.koin.core.component.getScopeId
 
 
 class LoginFragment : Fragment(R.layout.fragment_login), ColorCallback {
@@ -106,6 +106,17 @@ class LoginFragment : Fragment(R.layout.fragment_login), ColorCallback {
                                     getString(R.string.notification),
                                     result.data.message.message
                                 )
+                                UserClient.setUserFromUser(
+                                    User(
+                                        _id = result.data.data._id,
+                                        fullName = result.data.data.fullName,
+                                        email = result.data.data.email,
+                                        phone = result.data.data.phone,
+                                        image = result.data.data.image
+                                    )
+                                )
+                                MySharedPreferences.getInstance(requireActivity())
+                                    .putString(AppConstant.TOKEN_USER, result.data.data.accessToken)
                                 findNavController().popBackStack()
                             } else {
                                 showToastError(
@@ -119,7 +130,9 @@ class LoginFragment : Fragment(R.layout.fragment_login), ColorCallback {
                 }
             }
         }
-
+        binding.register.setOnClickListener {
+            findNavController().findNavControllerOpen(R.id.registerFragment)
+        }
     }
 
     override fun invoke(dialog: MaterialDialog, color: Int) {

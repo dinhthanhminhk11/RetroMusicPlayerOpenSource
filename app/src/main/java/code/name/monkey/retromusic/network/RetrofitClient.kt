@@ -11,7 +11,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import java.io.File
 import java.util.concurrent.TimeUnit
 
@@ -83,8 +82,8 @@ fun provideNewApiRetrofit(client: OkHttpClient): Retrofit {
         .build()
 }
 
-fun provideLoginService(retrofit: Retrofit): LoginService {
-    return retrofit.create(LoginService::class.java)
+fun provideLoginService(retrofit: Retrofit): UserService {
+    return retrofit.create(UserService::class.java)
 }
 
 fun provideDeezerRest(retrofit: Retrofit): DeezerService {
