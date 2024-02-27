@@ -1,6 +1,8 @@
 
 package code.name.monkey.retromusic.extensions
 
+import android.view.View
+import android.view.animation.AnimationUtils
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -37,6 +39,19 @@ fun AppCompatActivity.findNavController(@IdRes id: Int): NavController {
             popExit = android.R.anim.fade_out
         }
     }
+
+fun toggleVisibilityWithAnimation(view: View) {
+    val fadeInAnimation = AnimationUtils.loadAnimation(view.context, android.R.anim.fade_in)
+    val fadeOutAnimation = AnimationUtils.loadAnimation(view.context, android.R.anim.fade_out)
+
+    if (view.visibility == View.VISIBLE) {
+        view.startAnimation(fadeOutAnimation)
+        view.visibility = View.GONE
+    } else {
+        view.startAnimation(fadeInAnimation)
+        view.visibility = View.VISIBLE
+    }
+}
 
 val navOptionsOpen by lazy {
     navOptions {

@@ -573,4 +573,5 @@
     <string name="phone">Số điện thoại</string>
     <string name="email">Email</string>
     <string name="passwordAgain">Nhập lại mật khẩu</string>
+    <string name="logout">Đăng xuất</string>
 </resources>

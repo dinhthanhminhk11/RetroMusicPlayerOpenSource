@@ -26,6 +26,7 @@
 
 
     <LinearLayout
+        android:id="@+id/loginNotNullContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/appBarLayout"
@@ -35,7 +36,7 @@
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/bannerImage"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="180dp"
             android:layout_margin="16dp"
             android:scaleType="centerCrop"
             android:transitionName="banner_image"
@@ -80,8 +81,7 @@
                     android:hint="@string/my_name"
                     android:importantForAutofill="yes"
                     android:inputType="textPersonName|textCapWords|text"
-                    android:textAppearance="@style/TextViewSubtitle1"
-                    tools:text="@tools:sample/full_names" />
+                    android:textAppearance="@style/TextViewSubtitle1" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
@@ -107,8 +107,7 @@
                 android:autofillHints="name"
                 android:hint="@string/email"
                 android:importantForAutofill="yes"
-                android:textAppearance="@style/TextViewSubtitle1"
-                tools:text="minh" />
+                android:textAppearance="@style/TextViewSubtitle1" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -133,9 +132,50 @@
                 android:autofillHints="name"
                 android:hint="@string/phone"
                 android:importantForAutofill="yes"
-                android:textAppearance="@style/TextViewSubtitle1"
-                tools:text="minh" />
+                android:textAppearance="@style/TextViewSubtitle1" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/logOut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="20dp"
+            android:paddingVertical="16dp"
+            android:text="@string/logout"
+            android:textAppearance="@style/TextViewButton"
+            android:textColor="@color/md_white_1000" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/loginNull"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/appBarLayout"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <code.name.monkey.retromusic.views.RetroShapeableImageView
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="16dp"
+            android:scaleType="centerCrop"
+            android:transitionName="user_image"
+            app:retroCornerSize="36dp"
+            app:srcCompat="@drawable/ic_person_flat" />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/login"
+            style="@style/Widget.Material3.Button.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:text="@string/login"
+            android:textAppearance="@style/TextViewButton"
+            android:textColor="@color/md_white_1000" />
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -145,21 +185,28 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:fitsSystemWindows="false"
         android:src="@drawable/ic_save"
-        android:text="@string/save" />
+        android:text="@string/save"
+        android:visibility="gone" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|start"
-        android:layout_margin="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:fitsSystemWindows="false"
         android:src="@drawable/ic_person_flat"
         android:text="@string/login"
+        android:visibility="gone"
         tools:layout_editor_absoluteX="256dp"
         tools:layout_editor_absoluteY="501dp" />
 </RelativeLayout>

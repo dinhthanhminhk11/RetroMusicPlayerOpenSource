@@ -1,5 +1,6 @@
 package code.name.monkey.retromusic.fragments.other
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -15,22 +16,24 @@ import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navOptions
+import code.name.monkey.retromusic.App
 import code.name.monkey.retromusic.Constants.USER_BANNER
 import code.name.monkey.retromusic.Constants.USER_PROFILE
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.databinding.FragmentUserInfoBinding
 import code.name.monkey.retromusic.extensions.accentColor
 import code.name.monkey.retromusic.extensions.applyToolbar
-import code.name.monkey.retromusic.extensions.fadeNavOptionsInOut
 import code.name.monkey.retromusic.extensions.findNavControllerOpen
 import code.name.monkey.retromusic.extensions.showToast
+import code.name.monkey.retromusic.extensions.toggleVisibilityWithAnimation
 import code.name.monkey.retromusic.fragments.LibraryViewModel
 import code.name.monkey.retromusic.glide.RetroGlideExtension
 import code.name.monkey.retromusic.glide.RetroGlideExtension.profileBannerOptions
 import code.name.monkey.retromusic.glide.RetroGlideExtension.userProfileOptions
 import code.name.monkey.retromusic.model.user.UserClient
+import code.name.monkey.retromusic.util.AppConstant
 import code.name.monkey.retromusic.util.ImageUtil
+import code.name.monkey.retromusic.util.MySharedPreferences
 import code.name.monkey.retromusic.util.PreferenceUtil.userName
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -68,13 +71,15 @@ class UserInfoFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("UseRequireInsteadOfGet")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         applyToolbar(binding.toolbar)
 
         binding.nameContainer.accentColor()
         binding.next.accentColor()
-
+//        toggleVisibilityWithAnimation(binding.loginNull!!)
+//        toggleVisibilityWithAnimation(binding.loginNotNullContainer!!)
         binding.userImage.setOnClickListener {
             showUserImageOptions()
         }
@@ -87,6 +92,12 @@ class UserInfoFragment : Fragment() {
             findNavController().findNavControllerOpen(
                 R.id.loginFragment
             )
+        }
+
+        binding.logOut?.setOnClickListener {
+            MySharedPreferences.getInstance(activity!!)
+                .putString(AppConstant.TOKEN_USER, "")
+            checkTokenAndVisibility("")
         }
 
         binding.next.setOnClickListener {
@@ -110,17 +121,32 @@ class UserInfoFragment : Fragment() {
             binding.next.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 bottomMargin = it
             }
-            binding.login?.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                bottomMargin = it
-            }
+//            binding.login?.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+//                bottomMargin = it
+//            }
         }
     }
 
+    private fun checkTokenAndVisibility(token: String) {
+        if (!token.isEmpty()) {
+            binding.loginNotNullContainer?.visibility = View.VISIBLE
+            binding.loginNull?.visibility = View.GONE
+        } else {
+            binding.loginNotNullContainer?.visibility = View.GONE
+            binding.loginNull?.visibility = View.VISIBLE
+        }
+    }
+
+    @SuppressLint("UseRequireInsteadOfGet")
     override fun onResume() {
         super.onResume()
         binding.name.setText(UserClient.name)
-        binding.phone?.setText(UserClient.phone )
+        binding.phone?.setText(UserClient.phone)
         binding.email?.setText(UserClient.email)
+        checkTokenAndVisibility(
+            MySharedPreferences.getInstance(activity!!).getString(AppConstant.TOKEN_USER, "")
+                .toString()
+        )
     }
 
     private fun showBannerImageOptions() {

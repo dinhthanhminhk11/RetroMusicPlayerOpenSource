@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
@@ -81,13 +82,12 @@
                 tools:text="minh" />
         </com.google.android.material.textfield.TextInputLayout>
 
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/login"
-            style="@style/Widget.Material3.Button.Icon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
+            android:textColor="@color/md_white_1000"
             android:layout_marginTop="20dp"
             android:paddingVertical="16dp"
             android:text="@string/login"
@@ -123,11 +123,11 @@
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:layout_centerInParent="true" />
+        app:layout_constraintTop_toTopOf="parent" />
 </RelativeLayout>
