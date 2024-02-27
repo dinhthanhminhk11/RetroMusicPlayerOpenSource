@@ -23,6 +23,7 @@ import code.name.monkey.retromusic.model.user.UserClient.phone
 import code.name.monkey.retromusic.network.Result
 import code.name.monkey.retromusic.util.AppConstant
 import code.name.monkey.retromusic.util.MySharedPreferences
+import code.name.monkey.retromusic.util.PreferenceUtil.userName
 import code.name.monkey.retromusic.util.extention.showToastError
 import code.name.monkey.retromusic.util.extention.showToastSuccess
 import code.name.monkey.retromusic.util.logD
@@ -106,6 +107,7 @@ class LoginFragment : Fragment(R.layout.fragment_login), ColorCallback {
                                     getString(R.string.notification),
                                     result.data.message.message
                                 )
+                                userName = result.data.data.fullName
                                 UserClient.setUserFromUser(
                                     User(
                                         _id = result.data.data._id,

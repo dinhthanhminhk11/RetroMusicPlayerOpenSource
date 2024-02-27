@@ -30,6 +30,7 @@ import code.name.monkey.retromusic.fragments.LibraryViewModel
 import code.name.monkey.retromusic.glide.RetroGlideExtension
 import code.name.monkey.retromusic.glide.RetroGlideExtension.profileBannerOptions
 import code.name.monkey.retromusic.glide.RetroGlideExtension.userProfileOptions
+import code.name.monkey.retromusic.model.user.User
 import code.name.monkey.retromusic.model.user.UserClient
 import code.name.monkey.retromusic.util.AppConstant
 import code.name.monkey.retromusic.util.ImageUtil
@@ -98,6 +99,8 @@ class UserInfoFragment : Fragment() {
             MySharedPreferences.getInstance(activity!!)
                 .putString(AppConstant.TOKEN_USER, "")
             checkTokenAndVisibility("")
+            UserClient.setUserFromUser(User())
+            userName = getString(R.string.user_name)
         }
 
         binding.next.setOnClickListener {
