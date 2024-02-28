@@ -30,6 +30,7 @@ import code.name.monkey.retromusic.model.Playlist
 import code.name.monkey.retromusic.model.Song
 import code.name.monkey.retromusic.model.request.BodyRequest
 import code.name.monkey.retromusic.model.response.LoginResponse
+import code.name.monkey.retromusic.model.response.Message
 import code.name.monkey.retromusic.model.smartplaylist.NotPlayedPlaylist
 import code.name.monkey.retromusic.network.LastFMService
 import code.name.monkey.retromusic.network.Result
@@ -49,7 +50,6 @@ import code.name.monkey.retromusic.repository.dataSource.local.TopPlayedLocalDat
 import code.name.monkey.retromusic.repository.dataSource.network.LoginRemoteDataSource
 import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealSearchRepositoryImpl
 import code.name.monkey.retromusic.util.logE
-import retrofit2.Response
 
 class RealRepositoryImpl(
     private val context: Context,
@@ -194,6 +194,14 @@ class RealRepositoryImpl(
 
     override suspend fun getUserByToken(token: String): LoginResponse {
         return loginRemoteDataSource.getUserByToken(token)
+    }
+
+    override suspend fun generateOTP(bodyRequest: BodyRequest): Result<Message> {
+        return responseToResource(loginRemoteDataSource.generateOTP(bodyRequest))
+    }
+
+    override suspend fun verifyOTP(bodyRequest: BodyRequest): Result<LoginResponse> {
+        return responseToResource(loginRemoteDataSource.verifyOTP(bodyRequest))
     }
 
     override suspend fun playlistSongs(playlistWithSongs: PlaylistWithSongs): List<Song> =

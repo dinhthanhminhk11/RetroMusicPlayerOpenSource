@@ -570,9 +570,14 @@
     <string name="enterPass">Xin vui lòng nhập địa chỉ Password</string>
     <string name="enterMailFaild">Địa chỉ Email không đúng</string>
     <string name="register">Đăng ký</string>
+    <string name="confirmOtp">Xác thực</string>
     <string name="phone">Số điện thoại</string>
     <string name="email">Email</string>
     <string name="passwordAgain">Nhập lại mật khẩu</string>
     <string name="logout">Đăng xuất</string>
     <string name="name">Họ và tên</string>
+    <string name="notToOTP">Bạn không nhận được OTP</string>
+    <string name="confirm">Xác nhận</string>
+    <string name="toPhone">Nhập mã xác thực 6 số được gửi đến email: %s</string>
+    <string name="sendAgain">Gửi lại</string>
 </resources>

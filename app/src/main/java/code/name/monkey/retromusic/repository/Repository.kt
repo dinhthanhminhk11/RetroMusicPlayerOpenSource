@@ -1,4 +1,3 @@
-
 package code.name.monkey.retromusic.repository
 
 import androidx.lifecycle.LiveData
@@ -17,10 +16,10 @@ import code.name.monkey.retromusic.model.Playlist
 import code.name.monkey.retromusic.model.Song
 import code.name.monkey.retromusic.model.request.BodyRequest
 import code.name.monkey.retromusic.model.response.LoginResponse
+import code.name.monkey.retromusic.model.response.Message
 import code.name.monkey.retromusic.network.Result
 import code.name.monkey.retromusic.network.model.LastFmAlbum
 import code.name.monkey.retromusic.network.model.LastFmArtist
-import retrofit2.Response
 
 interface Repository {
     fun historySong(): List<HistoryEntity>
@@ -94,4 +93,6 @@ interface Repository {
     suspend fun getUser(bodyRequest: BodyRequest): Result<LoginResponse>
     suspend fun register(bodyRequest: BodyRequest): Result<LoginResponse>
     suspend fun getUserByToken(token: String): LoginResponse
+    suspend fun generateOTP(bodyRequest: BodyRequest): Result<Message>
+    suspend fun verifyOTP(bodyRequest: BodyRequest): Result<LoginResponse>
 }

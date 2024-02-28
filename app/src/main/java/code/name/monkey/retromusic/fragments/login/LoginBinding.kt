@@ -1,9 +1,7 @@
 package code.name.monkey.retromusic.fragments.login
 
-import androidx.appcompat.widget.Toolbar
 import code.name.monkey.retromusic.databinding.FragmentLoginBinding
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.textfield.TextInputEditText
 
 class LoginBinding(loginBinding: FragmentLoginBinding) {
     val root = loginBinding.root

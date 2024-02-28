@@ -6,17 +6,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import code.name.monkey.retromusic.App
+import code.name.monkey.retromusic.EXTRA_ALBUM_ID
+import code.name.monkey.retromusic.EXTRA_EMAIL
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.databinding.FragmentRegisterBinding
 import code.name.monkey.retromusic.encryption.AESUtil
 import code.name.monkey.retromusic.encryption.RSAUtil
 import code.name.monkey.retromusic.extensions.applyToolbar
+import code.name.monkey.retromusic.extensions.findNavControllerOpen
+import code.name.monkey.retromusic.extensions.findNavControllerOpenWithArgs
 import code.name.monkey.retromusic.fragments.login.LoginViewModel
 import code.name.monkey.retromusic.model.request.BodyRequest
 import code.name.monkey.retromusic.model.user.User
 import code.name.monkey.retromusic.model.user.UserClient
+import code.name.monkey.retromusic.model.user.UserClient.email
 import code.name.monkey.retromusic.network.Result
 import code.name.monkey.retromusic.util.AppConstant
 import code.name.monkey.retromusic.util.MySharedPreferences
@@ -97,7 +103,8 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                                 result.data.message.message
                             )
                             if(!result.data.data.verified){
-
+                                findNavController().findNavControllerOpenWithArgs(R.id.OTPFragment , bundleOf(
+                                    EXTRA_EMAIL to binding.email.text.toString()))
                             }
                         } else {
                             showToastError(

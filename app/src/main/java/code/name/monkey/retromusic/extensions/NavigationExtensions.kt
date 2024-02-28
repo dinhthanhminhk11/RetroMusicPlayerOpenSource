@@ -1,6 +1,6 @@
-
 package code.name.monkey.retromusic.extensions
 
+import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.annotation.IdRes
@@ -30,7 +30,7 @@ fun AppCompatActivity.findNavController(@IdRes id: Int): NavController {
     return fragment.navController
 }
 
- val fadeNavOptionsInOut
+val fadeNavOptionsInOut
     get() = navOptions {
         anim {
             enter = android.R.anim.fade_in
@@ -75,6 +75,14 @@ fun NavController.findNavControllerOpen(
     } else {
         navigate(resId, null, defaultNavOptions)
     }
+}
+
+fun NavController.findNavControllerOpenWithArgs(
+    resId: Int,
+    args: Bundle? = null,
+) {
+    val defaultNavOptions = navOptionsOpen
+    navigate(resId, args, defaultNavOptions)
 }
 
 fun NavController.findNavControllerInOut(
