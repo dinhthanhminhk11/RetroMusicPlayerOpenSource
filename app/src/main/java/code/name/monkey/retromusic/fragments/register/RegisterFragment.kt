@@ -12,6 +12,9 @@ import code.name.monkey.retromusic.App
 import code.name.monkey.retromusic.EXTRA_ALBUM_ID
 import code.name.monkey.retromusic.EXTRA_EMAIL
 import code.name.monkey.retromusic.R
+import code.name.monkey.retromusic.TYPE_FRAGMENT
+import code.name.monkey.retromusic.TYPE_FRAGMENT_LOGIN
+import code.name.monkey.retromusic.TYPE_FRAGMENT_REGISTER
 import code.name.monkey.retromusic.databinding.FragmentRegisterBinding
 import code.name.monkey.retromusic.encryption.AESUtil
 import code.name.monkey.retromusic.encryption.RSAUtil
@@ -81,7 +84,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                 )
             )
 
-            registerViewModel.register(bodyRequest).observe(viewLifecycleOwner) { result->
+            registerViewModel.register(bodyRequest).observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is Result.Loading -> {
                         logD("Loading")
@@ -102,9 +105,13 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                                 getString(R.string.notification),
                                 result.data.message.message
                             )
-                            if(!result.data.data.verified){
-                                findNavController().findNavControllerOpenWithArgs(R.id.OTPFragment , bundleOf(
-                                    EXTRA_EMAIL to binding.email.text.toString()))
+                            if (!result.data.data.verified) {
+                                findNavController().findNavControllerOpenWithArgs(
+                                    R.id.OTPFragment, bundleOf(
+                                        EXTRA_EMAIL to binding.email.text.toString(),
+                                        TYPE_FRAGMENT to TYPE_FRAGMENT_REGISTER
+                                    )
+                                )
                             }
                         } else {
                             showToastError(

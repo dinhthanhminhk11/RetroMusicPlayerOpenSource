@@ -150,3 +150,6 @@ const val SWIPE_ANYWHERE_NOW_PLAYING = "swipe_anywhere_now_playing"
 const val PAUSE_HISTORY = "pause_history"
 const val MANAGE_AUDIO_FOCUS = "manage_audio_focus"
 const val SWIPE_DOWN_DISMISS = "swipe_to_dismiss"
+const val TYPE_FRAGMENT = "type_fragment"
+const val TYPE_FRAGMENT_LOGIN = 1
+const val TYPE_FRAGMENT_REGISTER = 2

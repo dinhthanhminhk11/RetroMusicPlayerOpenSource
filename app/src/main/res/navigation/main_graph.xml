@@ -144,5 +144,8 @@
         <argument
             android:name="extra_email"
             app:argType="string" />
+        <argument
+            android:name="type_fragment"
+            app:argType="integer" />
     </fragment>
 </navigation>

@@ -35,4 +35,14 @@ class OtpViewModel(private val realRepositoryImpl: RealRepositoryImpl) : ViewMod
             }
         }
     }
+
+    fun loginByToken(token: String): LiveData<LoginResponse> =
+        liveData(Dispatchers.IO) {
+            try {
+                val loginResponse = realRepositoryImpl.getUserByToken(token)
+                emit(loginResponse)
+            } catch (e: Exception) {
+
+            }
+        }
 }

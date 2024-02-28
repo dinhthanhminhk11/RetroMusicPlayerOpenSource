@@ -580,4 +580,5 @@
     <string name="confirm">Xác nhận</string>
     <string name="toPhone">Nhập mã xác thực 6 số được gửi đến email: %s</string>
     <string name="sendAgain">Gửi lại</string>
+    <string name="confirmLoginByOTP">Xác thực thành công bạn có muốn đăng nhập luôn</string>
 </resources>

@@ -3,18 +3,23 @@ package code.name.monkey.retromusic.fragments.login
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import code.name.monkey.appthemehelper.ThemeStore
 import code.name.monkey.appthemehelper.util.VersionUtils
 import code.name.monkey.retromusic.App
+import code.name.monkey.retromusic.EXTRA_EMAIL
 import code.name.monkey.retromusic.R
+import code.name.monkey.retromusic.TYPE_FRAGMENT
+import code.name.monkey.retromusic.TYPE_FRAGMENT_LOGIN
 import code.name.monkey.retromusic.appshortcuts.DynamicShortcutManager
 import code.name.monkey.retromusic.databinding.FragmentLoginBinding
 import code.name.monkey.retromusic.encryption.AESUtil
 import code.name.monkey.retromusic.encryption.RSAUtil
 import code.name.monkey.retromusic.extensions.applyToolbar
 import code.name.monkey.retromusic.extensions.findNavControllerOpen
+import code.name.monkey.retromusic.extensions.findNavControllerOpenWithArgs
 import code.name.monkey.retromusic.extensions.isValidEmail
 import code.name.monkey.retromusic.model.request.BodyRequest
 import code.name.monkey.retromusic.model.user.User
@@ -46,7 +51,7 @@ class LoginFragment : Fragment(R.layout.fragment_login), ColorCallback {
         applyToolbar(binding.toolbar)
 
         binding.password.setText("m01675784487")
-        binding.userName.setText("minhk11642002@gmail.com")
+        binding.userName.setText("dinhthanhminhk11@gmail.com")
         binding.login.setOnClickListener {
             if (binding.userName.text!!.isEmpty()) {
                 showToastError(
@@ -125,6 +130,14 @@ class LoginFragment : Fragment(R.layout.fragment_login), ColorCallback {
                                     activity!!, getString(R.string.notification),
                                     result.data.message.message
                                 )
+                                if (result.data.message.type == 1122) { //  check trường hợp chưa xác nhận
+                                    findNavController().findNavControllerOpenWithArgs(
+                                        R.id.OTPFragment, bundleOf(
+                                            EXTRA_EMAIL to binding.userName.text.toString(),
+                                            TYPE_FRAGMENT to TYPE_FRAGMENT_LOGIN
+                                        )
+                                    )
+                                }
                             }
 
                         }
