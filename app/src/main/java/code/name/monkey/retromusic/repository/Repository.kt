@@ -20,6 +20,8 @@ import code.name.monkey.retromusic.model.response.Message
 import code.name.monkey.retromusic.network.Result
 import code.name.monkey.retromusic.network.model.LastFmAlbum
 import code.name.monkey.retromusic.network.model.LastFmArtist
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 interface Repository {
     fun historySong(): List<HistoryEntity>
@@ -95,4 +97,10 @@ interface Repository {
     suspend fun getUserByToken(token: String): LoginResponse
     suspend fun generateOTP(bodyRequest: BodyRequest): Result<Message>
     suspend fun verifyOTP(bodyRequest: BodyRequest): Result<LoginResponse>
+    suspend fun updateUser(
+        email: RequestBody,
+        fullName: RequestBody?,
+        image: MultipartBody.Part?,
+        imageBanner: MultipartBody.Part?,
+    ): Result<LoginResponse>
 }

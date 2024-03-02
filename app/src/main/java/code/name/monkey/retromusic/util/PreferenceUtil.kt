@@ -1,5 +1,6 @@
 package code.name.monkey.retromusic.util
 
+import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.net.ConnectivityManager
@@ -108,6 +109,15 @@ object PreferenceUtil {
         set(value) = sharedPreferences.edit {
             putString(USER_NAME, value)
         }
+    var Activity.userName
+        get() = sharedPreferences.getString(
+            USER_NAME,
+            getString(R.string.user_name)
+        )
+        set(value) = sharedPreferences.edit {
+            putString(USER_NAME, value)
+        }
+
 
     var safSdCardUri
         get() = sharedPreferences.getStringOrDefault(SAF_SDCARD_URI, "")
@@ -349,6 +359,7 @@ object PreferenceUtil {
                     netInfo != null && netInfo.type == ConnectivityManager.TYPE_WIFI && netInfo.isConnectedOrConnecting
                 }
             }
+
             "never" -> false
             else -> false
         }

@@ -89,6 +89,7 @@ import code.name.monkey.retromusic.model.user.UserClient
 import code.name.monkey.retromusic.util.AppConstant
 import code.name.monkey.retromusic.util.MySharedPreferences
 import code.name.monkey.retromusic.util.PreferenceUtil
+import code.name.monkey.retromusic.util.PreferenceUtil.userName
 import code.name.monkey.retromusic.util.ViewUtil
 import code.name.monkey.retromusic.util.logD
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -479,6 +480,7 @@ abstract class AbsSlidingMusicPanelActivity : AbsMusicServiceActivity(),
                         image = result.data.image
                     )
                 )
+                userName = result.data.fullName
             }
         }
     }

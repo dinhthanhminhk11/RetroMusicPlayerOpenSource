@@ -13,15 +13,19 @@ import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.interfaces.IMusicServiceEventListener
 import code.name.monkey.retromusic.model.*
 import code.name.monkey.retromusic.model.response.LoginResponse
+import code.name.monkey.retromusic.network.Result
 import code.name.monkey.retromusic.repository.RealRepositoryImpl
 import code.name.monkey.retromusic.util.DensityUtil
 import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.logD
+import code.name.monkey.retromusic.util.logE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import java.io.File
 
 class LibraryViewModel(
@@ -109,6 +113,21 @@ class LibraryViewModel(
                 emit(loginResponse)
             } catch (e: Exception) {
 
+            }
+        }
+
+    fun updateUserInfo(
+        email: RequestBody,
+        fullName: RequestBody?,
+        imageFile: MultipartBody.Part?,
+        imageBannerFile: MultipartBody.Part?
+    ): LiveData<Result<LoginResponse>> =
+        liveData(Dispatchers.IO) {
+            try {
+                val userInfo = repository.updateUser(email,fullName, imageFile, imageBannerFile)
+                emit(userInfo)
+            } catch (e: Exception) {
+                logE(e.message.toString())
             }
         }
 

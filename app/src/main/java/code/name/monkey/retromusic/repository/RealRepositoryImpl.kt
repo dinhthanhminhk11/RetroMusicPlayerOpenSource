@@ -50,6 +50,8 @@ import code.name.monkey.retromusic.repository.dataSource.local.TopPlayedLocalDat
 import code.name.monkey.retromusic.repository.dataSource.network.LoginRemoteDataSource
 import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealSearchRepositoryImpl
 import code.name.monkey.retromusic.util.logE
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 class RealRepositoryImpl(
     private val context: Context,
@@ -202,6 +204,15 @@ class RealRepositoryImpl(
 
     override suspend fun verifyOTP(bodyRequest: BodyRequest): Result<LoginResponse> {
         return responseToResource(loginRemoteDataSource.verifyOTP(bodyRequest))
+    }
+
+    override suspend fun updateUser(
+        email: RequestBody,
+        fullName: RequestBody?,
+        image: MultipartBody.Part?,
+        imageBanner: MultipartBody.Part?
+    ): Result<LoginResponse> {
+        return responseToResource(loginRemoteDataSource.updateUser( email,fullName, image, imageBanner))
     }
 
     override suspend fun playlistSongs(playlistWithSongs: PlaylistWithSongs): List<Song> =

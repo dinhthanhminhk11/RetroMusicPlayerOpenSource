@@ -11,31 +11,40 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import code.name.monkey.retromusic.App
 import code.name.monkey.retromusic.Constants.USER_BANNER
 import code.name.monkey.retromusic.Constants.USER_PROFILE
+import code.name.monkey.retromusic.EXTRA_EMAIL
 import code.name.monkey.retromusic.R
+import code.name.monkey.retromusic.TYPE_FRAGMENT
+import code.name.monkey.retromusic.TYPE_FRAGMENT_LOGIN
 import code.name.monkey.retromusic.databinding.FragmentUserInfoBinding
 import code.name.monkey.retromusic.extensions.accentColor
 import code.name.monkey.retromusic.extensions.applyToolbar
 import code.name.monkey.retromusic.extensions.findNavControllerOpen
+import code.name.monkey.retromusic.extensions.findNavControllerOpenWithArgs
 import code.name.monkey.retromusic.extensions.showToast
-import code.name.monkey.retromusic.extensions.toggleVisibilityWithAnimation
 import code.name.monkey.retromusic.fragments.LibraryViewModel
 import code.name.monkey.retromusic.glide.RetroGlideExtension
 import code.name.monkey.retromusic.glide.RetroGlideExtension.profileBannerOptions
 import code.name.monkey.retromusic.glide.RetroGlideExtension.userProfileOptions
 import code.name.monkey.retromusic.model.user.User
 import code.name.monkey.retromusic.model.user.UserClient
+import code.name.monkey.retromusic.network.Result
 import code.name.monkey.retromusic.util.AppConstant
 import code.name.monkey.retromusic.util.ImageUtil
 import code.name.monkey.retromusic.util.MySharedPreferences
 import code.name.monkey.retromusic.util.PreferenceUtil.userName
+import code.name.monkey.retromusic.util.extention.showToastError
+import code.name.monkey.retromusic.util.extention.showToastSuccess
+import code.name.monkey.retromusic.util.logD
+import code.name.monkey.retromusic.util.logE
+import code.name.monkey.retromusic.views.dialog.DialogConfirmCustom
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -49,6 +58,12 @@ import com.google.android.material.transition.MaterialContainerTransform
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import java.io.File
 
@@ -57,7 +72,8 @@ class UserInfoFragment : Fragment() {
     private var _binding: FragmentUserInfoBinding? = null
     private val binding get() = _binding!!
     private val libraryViewModel: LibraryViewModel by activityViewModel()
-
+    private var imagePath: Uri? = null
+    private var imagePathBanner: Uri? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -79,6 +95,8 @@ class UserInfoFragment : Fragment() {
 
         binding.nameContainer.accentColor()
         binding.next.accentColor()
+        binding.email?.isEnabled = false
+        binding.phone?.isEnabled = false
 //        toggleVisibilityWithAnimation(binding.loginNull!!)
 //        toggleVisibilityWithAnimation(binding.loginNotNullContainer!!)
         binding.userImage.setOnClickListener {
@@ -96,11 +114,67 @@ class UserInfoFragment : Fragment() {
         }
 
         binding.logOut?.setOnClickListener {
-            MySharedPreferences.getInstance(activity!!)
-                .putString(AppConstant.TOKEN_USER, "")
-            checkTokenAndVisibility("")
-            UserClient.setUserFromUser(User())
-            userName = getString(R.string.user_name)
+//            DialogConfirmCustom.create(
+//                activity!!,
+//                getString(R.string.confirmLogOut),
+//                onAccessClick = {
+//                    MySharedPreferences.getInstance(activity!!)
+//                        .putString(AppConstant.TOKEN_USER, "")
+//                    checkTokenAndVisibility("")
+//                    UserClient.setUserFromUser(User())
+//                    userName = getString(R.string.user_name)
+//                },
+//                onCancelClick = {}
+//            ).show()
+
+            val emailBodyRequest: RequestBody = RequestBody.create(
+                "text/plain".toMediaTypeOrNull(), UserClient.email.toString()
+            )
+
+            val fullNameRequestBody: RequestBody? =
+                if (binding.name.text.toString() != null) RequestBody.create(
+                    "text/plain".toMediaTypeOrNull(), binding.name.text.toString()
+                ) else null
+
+            val imageFilePart: MultipartBody.Part? = if (imagePath != null) {
+                val imageFile = File(imagePath!!.path!!)
+                val imageRequestBody = RequestBody.create("image/*".toMediaTypeOrNull(), imageFile)
+                MultipartBody.Part.createFormData("image", imageFile.name, imageRequestBody)
+            } else {
+                null
+            }
+
+            val imageBannerFilePart: MultipartBody.Part? = if (imagePathBanner != null) {
+                val imageBannerFile = File(imagePathBanner!!.path!!)
+                val imageBannerRequestBody = RequestBody.create(
+                    "image/*".toMediaTypeOrNull(),
+                    imageBannerFile
+                )
+                MultipartBody.Part.createFormData(
+                    "imageBanner",
+                    imageBannerFile.name,
+                    imageBannerRequestBody
+                )
+            } else {
+                null
+            }
+
+            libraryViewModel.updateUserInfo(emailBodyRequest,fullNameRequestBody, imageFilePart, imageBannerFilePart)
+                .observe(viewLifecycleOwner) {result->
+                    when (result) {
+                        is Result.Loading -> {
+
+                        }
+
+                        is Result.Error -> {
+
+                        }
+
+                        is Result.Success -> {
+
+                        }
+                    }
+                }
         }
 
         binding.next.setOnClickListener {
@@ -210,15 +284,17 @@ class UserInfoFragment : Fragment() {
 
     private val startForProfileImageResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-            saveImage(result) { fileUri ->
-                setAndSaveUserImage(fileUri)
+            saveImage(result) { fileUri -> // get uri
+//                setAndSaveUserImage(fileUri)
+                imagePath = fileUri
             }
         }
 
     private val startForBannerImageResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             saveImage(result) { fileUri ->
-                setAndSaveBannerImage(fileUri)
+//                setAndSaveBannerImage(fileUri)
+                imagePathBanner = fileUri
             }
         }
 
@@ -311,6 +387,8 @@ class UserInfoFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+
+
         _binding = null
     }
 }
