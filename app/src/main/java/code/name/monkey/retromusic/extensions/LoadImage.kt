@@ -17,3 +17,15 @@ fun loadImage(context: Context, imageUrl: String?, imageView: ImageView) {
         .apply(options)
         .into(imageView)
 }
+
+fun loadImageAvatar(context: Context, imageUrl: String?, imageView: ImageView) {
+    val options = RequestOptions()
+        .centerCrop()
+        .placeholder(R.drawable.imageloading)
+        .error(R.drawable.avd_artist)
+
+    Glide.with(context)
+        .load(imageUrl)
+        .apply(options)
+        .into(imageView)
+}

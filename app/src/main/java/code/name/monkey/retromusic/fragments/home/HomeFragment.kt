@@ -35,6 +35,7 @@ import code.name.monkey.retromusic.extensions.accentColor
 import code.name.monkey.retromusic.extensions.dip
 import code.name.monkey.retromusic.extensions.drawNextToNavbar
 import code.name.monkey.retromusic.extensions.elevatedAccentColor
+import code.name.monkey.retromusic.extensions.loadImageAvatar
 import code.name.monkey.retromusic.extensions.setUpMediaRouteButton
 import code.name.monkey.retromusic.fragments.ReloadType
 import code.name.monkey.retromusic.fragments.base.AbsMainActivityFragment
@@ -176,10 +177,7 @@ class HomeFragment :
                 .profileBannerOptions(RetroGlideExtension.getBannerModel())
                 .into(it)
         }
-        Glide.with(requireActivity())
-            .load(BASE_URL_IMAGE + image)
-            .userProfileOptions(RetroGlideExtension.getUserModel(), requireContext())
-            .into(binding.userImage)
+        loadImageAvatar(requireActivity() ,BASE_URL_IMAGE + image ,binding.userImage  )
     }
 
     fun colorButtons() {
