@@ -32,5 +32,10 @@ interface UserService {
 
     @Multipart
     @PATCH("auth/updateUser")
-    suspend fun updateUser(@Part email: RequestBody,@Part fullName: RequestBody?, @Part image: MultipartBody.Part? , @Part imageBanner: MultipartBody.Part? , ): Response<LoginResponse>
+    suspend fun updateUser(
+        @Part("email") email: RequestBody,
+        @Part("fullName") fullName: RequestBody?,
+        @Part image: MultipartBody.Part?,
+        @Part imageBanner: MultipartBody.Part?
+    ): Response<LoginResponse>
 }

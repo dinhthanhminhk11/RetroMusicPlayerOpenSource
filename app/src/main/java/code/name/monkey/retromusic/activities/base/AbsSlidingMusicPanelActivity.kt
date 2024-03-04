@@ -37,6 +37,7 @@ import code.name.monkey.retromusic.TAB_TEXT_MODE
 import code.name.monkey.retromusic.TOGGLE_ADD_CONTROLS
 import code.name.monkey.retromusic.TOGGLE_FULL_SCREEN
 import code.name.monkey.retromusic.TOGGLE_VOLUME
+import code.name.monkey.retromusic.TOKEN_USER
 import code.name.monkey.retromusic.activities.PermissionActivity
 import code.name.monkey.retromusic.databinding.SlidingMusicPanelLayoutBinding
 import code.name.monkey.retromusic.extensions.currentFragment
@@ -86,9 +87,10 @@ import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.model.CategoryInfo
 import code.name.monkey.retromusic.model.user.User
 import code.name.monkey.retromusic.model.user.UserClient
-import code.name.monkey.retromusic.util.AppConstant
 import code.name.monkey.retromusic.util.MySharedPreferences
 import code.name.monkey.retromusic.util.PreferenceUtil
+import code.name.monkey.retromusic.util.PreferenceUtil.image
+import code.name.monkey.retromusic.util.PreferenceUtil.imageBanner
 import code.name.monkey.retromusic.util.PreferenceUtil.userName
 import code.name.monkey.retromusic.util.ViewUtil
 import code.name.monkey.retromusic.util.logD
@@ -468,7 +470,7 @@ abstract class AbsSlidingMusicPanelActivity : AbsMusicServiceActivity(),
 
     private fun loginByToken() {
         val token = MySharedPreferences.getInstance(this)
-            .getString(AppConstant.TOKEN_USER, "")
+            .getString(TOKEN_USER, "")
         if (!token.isNullOrEmpty()) {
             libraryViewModel.loginByToken(token).observe(this) { result ->
                 UserClient.setUserFromUser(
@@ -481,6 +483,8 @@ abstract class AbsSlidingMusicPanelActivity : AbsMusicServiceActivity(),
                     )
                 )
                 userName = result.data.fullName
+                image = result.data.image
+                imageBanner = result.data.imageBanner
             }
         }
     }

@@ -1,4 +1,3 @@
-
 package code.name.monkey.retromusic
 
 import android.provider.BaseColumns
@@ -45,6 +44,11 @@ object Constants {
     const val NUMBER_OF_TOP_TRACKS = 99
 }
 
+const val TOKEN_USER = "TOKEN_USER"
+const val BASE_URL = "http://192.168.28.139:3000"
+const val BASE_URL_API = "$BASE_URL/api/"
+const val BASE_URL_IMAGE = "$BASE_URL/uploads/"
+
 const val EXTRA_PLAYLIST_TYPE = "type"
 const val EXTRA_GENRE = "extra_genre"
 const val EXTRA_PLAYLIST = "extra_playlist"
@@ -74,6 +78,8 @@ const val ACCENT_COLOR = "accent_color"
 const val SHOULD_COLOR_APP_SHORTCUTS = "should_color_app_shortcuts"
 const val CIRCULAR_ALBUM_ART = "circular_album_art"
 const val USER_NAME = "user_name"
+const val USER_IMAGE = "user_image"
+const val USER_IMAGE_BANNER = "user_image_banner"
 const val TOGGLE_FULL_SCREEN = "toggle_full_screen"
 const val TOGGLE_VOLUME = "toggle_volume"
 const val ADAPTIVE_COLOR_APP = "adaptive_color_app"

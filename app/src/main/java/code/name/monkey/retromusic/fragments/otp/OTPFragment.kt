@@ -9,18 +9,19 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import code.name.monkey.retromusic.R
+import code.name.monkey.retromusic.TOKEN_USER
 import code.name.monkey.retromusic.TYPE_FRAGMENT_LOGIN
 import code.name.monkey.retromusic.TYPE_FRAGMENT_REGISTER
 import code.name.monkey.retromusic.databinding.FragmentOTPBinding
 import code.name.monkey.retromusic.extensions.applyToolbar
-import code.name.monkey.retromusic.extensions.findNavController
 import code.name.monkey.retromusic.model.request.BodyRequest
 import code.name.monkey.retromusic.model.response.UserData
 import code.name.monkey.retromusic.model.user.User
 import code.name.monkey.retromusic.model.user.UserClient
 import code.name.monkey.retromusic.network.Result
-import code.name.monkey.retromusic.util.AppConstant
 import code.name.monkey.retromusic.util.MySharedPreferences
+import code.name.monkey.retromusic.util.PreferenceUtil.image
+import code.name.monkey.retromusic.util.PreferenceUtil.imageBanner
 import code.name.monkey.retromusic.util.PreferenceUtil.userName
 import code.name.monkey.retromusic.util.extention.showToastError
 import code.name.monkey.retromusic.util.extention.showToastSuccess
@@ -135,7 +136,7 @@ class OTPFragment : Fragment(R.layout.fragment_o_t_p) {
 
     private fun loginByToken(data: UserData) {
         MySharedPreferences.getInstance(requireActivity())
-            .putString(AppConstant.TOKEN_USER, data.accessToken)
+            .putString(TOKEN_USER, data.accessToken)
         otpViewModel.loginByToken(data.accessToken)
             .observe(viewLifecycleOwner) { result ->
                 UserClient.setUserFromUser(
@@ -148,6 +149,8 @@ class OTPFragment : Fragment(R.layout.fragment_o_t_p) {
                     )
                 )
                 userName = result.data.fullName
+                image = result.data.image
+                imageBanner = result.data.imageBanner
                 findNavController().popBackStack(R.id.user_info_fragment, false)
             }
     }

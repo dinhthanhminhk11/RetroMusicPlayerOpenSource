@@ -20,7 +20,18 @@
             android:layout_height="wrap_content"
             app:navigationIcon="@drawable/ic_arrow_back"
             app:title="@string/profile"
-            app:titleTextAppearance="@style/ToolbarTextAppearanceNormal" />
+            app:titleTextAppearance="@style/ToolbarTextAppearanceNormal">
+
+            <ImageView
+                android:id="@+id/saveProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/round_done_24"
+                android:visibility="gone" />
+        </com.google.android.material.appbar.MaterialToolbar>
+
 
     </com.google.android.material.appbar.AppBarLayout>
 

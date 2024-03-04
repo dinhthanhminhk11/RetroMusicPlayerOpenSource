@@ -582,4 +582,5 @@
     <string name="sendAgain">Gửi lại</string>
     <string name="confirmLoginByOTP">Xác thực thành công bạn có muốn đăng nhập luôn</string>
     <string name="confirmLogOut">Bạn có chắc chắn muốn đăng xuất không</string>
+    <string name="updateProfileSuccess">Cập nhật thông tin thành công</string>
 </resources>

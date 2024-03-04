@@ -6,28 +6,28 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.os.bundleOf
 import androidx.core.view.doOnPreDraw
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import code.name.monkey.retromusic.BASE_URL_IMAGE
 import code.name.monkey.retromusic.Constants.USER_BANNER
 import code.name.monkey.retromusic.Constants.USER_PROFILE
-import code.name.monkey.retromusic.EXTRA_EMAIL
 import code.name.monkey.retromusic.R
-import code.name.monkey.retromusic.TYPE_FRAGMENT
-import code.name.monkey.retromusic.TYPE_FRAGMENT_LOGIN
+import code.name.monkey.retromusic.TOKEN_USER
 import code.name.monkey.retromusic.databinding.FragmentUserInfoBinding
 import code.name.monkey.retromusic.extensions.accentColor
 import code.name.monkey.retromusic.extensions.applyToolbar
 import code.name.monkey.retromusic.extensions.findNavControllerOpen
-import code.name.monkey.retromusic.extensions.findNavControllerOpenWithArgs
+import code.name.monkey.retromusic.extensions.loadImage
 import code.name.monkey.retromusic.extensions.showToast
 import code.name.monkey.retromusic.fragments.LibraryViewModel
 import code.name.monkey.retromusic.glide.RetroGlideExtension
@@ -36,14 +36,12 @@ import code.name.monkey.retromusic.glide.RetroGlideExtension.userProfileOptions
 import code.name.monkey.retromusic.model.user.User
 import code.name.monkey.retromusic.model.user.UserClient
 import code.name.monkey.retromusic.network.Result
-import code.name.monkey.retromusic.util.AppConstant
 import code.name.monkey.retromusic.util.ImageUtil
 import code.name.monkey.retromusic.util.MySharedPreferences
+import code.name.monkey.retromusic.util.PreferenceUtil.image
+import code.name.monkey.retromusic.util.PreferenceUtil.imageBanner
 import code.name.monkey.retromusic.util.PreferenceUtil.userName
-import code.name.monkey.retromusic.util.extention.showToastError
 import code.name.monkey.retromusic.util.extention.showToastSuccess
-import code.name.monkey.retromusic.util.logD
-import code.name.monkey.retromusic.util.logE
 import code.name.monkey.retromusic.views.dialog.DialogConfirmCustom
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -58,12 +56,9 @@ import com.google.android.material.transition.MaterialContainerTransform
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import java.io.File
 
@@ -74,6 +69,22 @@ class UserInfoFragment : Fragment() {
     private val libraryViewModel: LibraryViewModel by activityViewModel()
     private var imagePath: Uri? = null
     private var imagePathBanner: Uri? = null
+    private var hasImageChanged = false
+    private val textWatcher = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            val hasChanged = s?.toString() != UserClient.name
+            if (hasChanged || hasImageChanged) {
+                binding.saveProfile?.visibility = View.VISIBLE
+            } else {
+                binding.saveProfile?.visibility = View.GONE
+            }
+        }
+
+        override fun afterTextChanged(s: Editable?) {}
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -103,6 +114,8 @@ class UserInfoFragment : Fragment() {
             showUserImageOptions()
         }
 
+        binding.name.addTextChangedListener(textWatcher)
+
         binding.bannerImage.setOnClickListener {
             showBannerImageOptions()
         }
@@ -114,19 +127,21 @@ class UserInfoFragment : Fragment() {
         }
 
         binding.logOut?.setOnClickListener {
-//            DialogConfirmCustom.create(
-//                activity!!,
-//                getString(R.string.confirmLogOut),
-//                onAccessClick = {
-//                    MySharedPreferences.getInstance(activity!!)
-//                        .putString(AppConstant.TOKEN_USER, "")
-//                    checkTokenAndVisibility("")
-//                    UserClient.setUserFromUser(User())
-//                    userName = getString(R.string.user_name)
-//                },
-//                onCancelClick = {}
-//            ).show()
+            DialogConfirmCustom.create(
+                activity!!,
+                getString(R.string.confirmLogOut),
+                onAccessClick = {
+                    MySharedPreferences.getInstance(activity!!)
+                        .putString(TOKEN_USER, "")
+                    checkTokenAndVisibility("")
+                    UserClient.setUserFromUser(User())
+                    userName = getString(R.string.user_name)
+                },
+                onCancelClick = {}
+            ).show()
+        }
 
+        binding.saveProfile?.setOnClickListener {
             val emailBodyRequest: RequestBody = RequestBody.create(
                 "text/plain".toMediaTypeOrNull(), UserClient.email.toString()
             )
@@ -159,8 +174,13 @@ class UserInfoFragment : Fragment() {
                 null
             }
 
-            libraryViewModel.updateUserInfo(emailBodyRequest,fullNameRequestBody, imageFilePart, imageBannerFilePart)
-                .observe(viewLifecycleOwner) {result->
+            libraryViewModel.updateUserInfo(
+                emailBodyRequest,
+                fullNameRequestBody,
+                imageFilePart,
+                imageBannerFilePart
+            )
+                .observe(viewLifecycleOwner) { result ->
                     when (result) {
                         is Result.Loading -> {
 
@@ -171,7 +191,15 @@ class UserInfoFragment : Fragment() {
                         }
 
                         is Result.Success -> {
-
+                            userName = result.data.data.fullName
+                            image = result.data.data.image
+                            imageBanner = result.data.data.imageBanner
+                            showToastSuccess(
+                                activity!!,
+                                getString(R.string.notification),
+                                result.data.message.message
+                            )
+                            binding.saveProfile?.visibility = View.GONE
                         }
                     }
                 }
@@ -221,7 +249,7 @@ class UserInfoFragment : Fragment() {
         binding.phone?.setText(UserClient.phone)
         binding.email?.setText(UserClient.email)
         checkTokenAndVisibility(
-            MySharedPreferences.getInstance(activity!!).getString(AppConstant.TOKEN_USER, "")
+            MySharedPreferences.getInstance(activity!!).getString(TOKEN_USER, "")
                 .toString()
         )
     }
@@ -259,13 +287,8 @@ class UserInfoFragment : Fragment() {
     }
 
     private fun loadProfile() {
-        binding.bannerImage.let {
-            Glide.with(this).load(RetroGlideExtension.getBannerModel())
-                .profileBannerOptions(RetroGlideExtension.getBannerModel()).into(it)
-        }
-        Glide.with(this).load(RetroGlideExtension.getUserModel())
-            .userProfileOptions(RetroGlideExtension.getUserModel(), requireContext())
-            .into(binding.userImage)
+        loadImage(requireContext() ,BASE_URL_IMAGE + imageBanner, binding.bannerImage)
+        loadImage(requireContext() ,BASE_URL_IMAGE + image, binding.userImage)
     }
 
     private fun selectBannerImage() {
@@ -285,16 +308,14 @@ class UserInfoFragment : Fragment() {
     private val startForProfileImageResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             saveImage(result) { fileUri -> // get uri
-//                setAndSaveUserImage(fileUri)
-                imagePath = fileUri
+                setAndSaveUserImage(fileUri)
             }
         }
 
     private val startForBannerImageResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             saveImage(result) { fileUri ->
-//                setAndSaveBannerImage(fileUri)
-                imagePathBanner = fileUri
+                setAndSaveBannerImage(fileUri)
             }
         }
 
@@ -328,7 +349,12 @@ class UserInfoFragment : Fragment() {
                     dataSource: DataSource?,
                     isFirstResource: Boolean,
                 ): Boolean {
-                    resource?.let { saveImage(it, USER_BANNER) }
+                    resource?.let {
+//                        saveImage(it, USER_BANNER)
+                        imagePathBanner = fileUri
+                        binding.saveProfile?.visibility = View.VISIBLE
+                        hasImageChanged = true
+                    }
                     return false
                 }
 
@@ -370,7 +396,12 @@ class UserInfoFragment : Fragment() {
                     dataSource: DataSource?,
                     isFirstResource: Boolean,
                 ): Boolean {
-                    resource?.let { saveImage(it, USER_PROFILE) }
+                    resource?.let {
+                        /*saveImage(it, USER_PROFILE)*/
+                        imagePath = fileUri
+                        binding.saveProfile?.visibility = View.VISIBLE
+                        hasImageChanged = true
+                    }
                     return false
                 }
 
@@ -387,8 +418,6 @@ class UserInfoFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-
-
         _binding = null
     }
 }

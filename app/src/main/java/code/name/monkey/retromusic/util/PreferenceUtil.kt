@@ -109,6 +109,25 @@ object PreferenceUtil {
         set(value) = sharedPreferences.edit {
             putString(USER_NAME, value)
         }
+
+    var Fragment.image
+        get() = sharedPreferences.getString(
+            USER_IMAGE,
+            ""
+        )
+        set(value) = sharedPreferences.edit {
+            putString(USER_IMAGE, value)
+        }
+
+    var Fragment.imageBanner
+        get() = sharedPreferences.getString(
+            USER_IMAGE_BANNER,
+            ""
+        )
+        set(value) = sharedPreferences.edit {
+            putString(USER_IMAGE_BANNER, value)
+        }
+
     var Activity.userName
         get() = sharedPreferences.getString(
             USER_NAME,
@@ -118,6 +137,23 @@ object PreferenceUtil {
             putString(USER_NAME, value)
         }
 
+    var Activity.image
+        get() = sharedPreferences.getString(
+            USER_IMAGE,
+            ""
+        )
+        set(value) = sharedPreferences.edit {
+            putString(USER_IMAGE, value)
+        }
+
+    var Activity.imageBanner
+        get() = sharedPreferences.getString(
+            USER_IMAGE_BANNER,
+            ""
+        )
+        set(value) = sharedPreferences.edit {
+            putString(USER_IMAGE_BANNER, value)
+        }
 
     var safSdCardUri
         get() = sharedPreferences.getStringOrDefault(SAF_SDCARD_URI, "")

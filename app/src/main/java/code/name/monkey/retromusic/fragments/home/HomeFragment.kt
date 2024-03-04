@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import code.name.monkey.appthemehelper.common.ATHToolbarActivity
 import code.name.monkey.appthemehelper.util.ColorUtil
 import code.name.monkey.appthemehelper.util.ToolbarContentTintHelper
+import code.name.monkey.retromusic.BASE_URL_IMAGE
 import code.name.monkey.retromusic.EXTRA_PLAYLIST_TYPE
 import code.name.monkey.retromusic.HISTORY_PLAYLIST
 import code.name.monkey.retromusic.LAST_ADDED_PLAYLIST
@@ -45,6 +46,8 @@ import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.interfaces.IScrollHelper
 import code.name.monkey.retromusic.model.Song
 import code.name.monkey.retromusic.util.PreferenceUtil
+import code.name.monkey.retromusic.util.PreferenceUtil.image
+import code.name.monkey.retromusic.util.PreferenceUtil.imageBanner
 import code.name.monkey.retromusic.util.PreferenceUtil.userName
 import com.bumptech.glide.Glide
 import com.google.android.material.shape.MaterialShapeDrawable
@@ -169,12 +172,12 @@ class HomeFragment :
     private fun loadProfile() {
         binding.bannerImage?.let {
             Glide.with(requireContext())
-                .load(RetroGlideExtension.getBannerModel())
+                .load(BASE_URL_IMAGE + imageBanner)
                 .profileBannerOptions(RetroGlideExtension.getBannerModel())
                 .into(it)
         }
         Glide.with(requireActivity())
-            .load(RetroGlideExtension.getUserModel())
+            .load(BASE_URL_IMAGE + image)
             .userProfileOptions(RetroGlideExtension.getUserModel(), requireContext())
             .into(binding.userImage)
     }

@@ -8,5 +8,6 @@ data class UserData(
     val tokenDevice: String,
     val accessToken: String,
     val verified: Boolean,
-    val image: String
+    val image: String,
+    val imageBanner: String
 )

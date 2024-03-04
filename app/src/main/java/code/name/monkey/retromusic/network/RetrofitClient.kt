@@ -2,6 +2,7 @@ package code.name.monkey.retromusic.network
 
 import android.content.Context
 import code.name.monkey.retromusic.App
+import code.name.monkey.retromusic.BASE_URL_API
 import code.name.monkey.retromusic.BuildConfig
 import code.name.monkey.retromusic.network.conversion.LyricsConverterFactory
 import com.google.gson.GsonBuilder
@@ -76,7 +77,7 @@ fun provideNewApiRetrofit(client: OkHttpClient): Retrofit {
         .setLenient()
         .create()
     return Retrofit.Builder()
-        .baseUrl("http://192.168.28.139:3000/api/")
+        .baseUrl(BASE_URL_API)
         .addConverterFactory(GsonConverterFactory.create(gson))
         .callFactory { request -> client.newCall(request) }
         .build()
