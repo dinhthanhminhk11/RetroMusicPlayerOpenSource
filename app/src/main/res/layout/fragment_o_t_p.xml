@@ -36,11 +36,12 @@
             android:layout_marginTop="30dp"
             android:paddingHorizontal="20dp"
             android:text="@string/toPhone"
-            android:textColor="@color/black_color"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="16sp" />
 
         <code.name.monkey.retromusic.views.pinview.OtpView
             android:id="@+id/otp"
+            android:textAppearance="@style/TextViewSubtitle1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -49,7 +50,7 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:inputType="number"
-            android:textColor="@color/black_color"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="20sp"
             app:OtpCursorColor="@color/md_red_A400"
             app:OtpHideLineWhenFilled="false"
@@ -68,11 +69,11 @@
             android:paddingHorizontal="20dp">
 
             <TextView
+                android:textColor="?android:attr/textColorPrimary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:text="@string/notToOTP"
-                android:textColor="@color/black_color"
                 android:textSize="16sp" />
 
             <TextView

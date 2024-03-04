@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
+import code.name.monkey.appthemehelper.util.ColorUtil
 import code.name.monkey.retromusic.App
 import code.name.monkey.retromusic.EXTRA_EMAIL
 import code.name.monkey.retromusic.R
@@ -14,6 +15,7 @@ import code.name.monkey.retromusic.TYPE_FRAGMENT_REGISTER
 import code.name.monkey.retromusic.databinding.FragmentRegisterBinding
 import code.name.monkey.retromusic.encryption.AESUtil
 import code.name.monkey.retromusic.encryption.RSAUtil
+import code.name.monkey.retromusic.extensions.accentColor
 import code.name.monkey.retromusic.extensions.applyToolbar
 import code.name.monkey.retromusic.extensions.findNavControllerOpenWithArgs
 import code.name.monkey.retromusic.model.request.BodyRequest
@@ -36,12 +38,12 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         val registerBinding = FragmentRegisterBinding.bind(view)
         _binding = RegisterBinding(registerBinding)
         applyToolbar(binding.toolbar)
-
         binding.email.setText("dinhthanhminhk11@gmail.com")
         binding.phone.setText("0375785587")
         binding.name.setText("Dinh MInh")
         binding.password.setText("m01675784487")
-
+        binding.register.setBackgroundColor(ColorUtil.withAlpha(accentColor(), 1f))
+        binding.login.setTextColor(accentColor())
         binding.login.setOnClickListener {
             findNavController().popBackStack()
         }

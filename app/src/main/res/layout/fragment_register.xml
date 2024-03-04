@@ -179,11 +179,11 @@
             android:orientation="horizontal">
 
             <TextView
+                android:textColor="?android:attr/textColorPrimary"
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Bạn đã có tài khoản"
-                android:textColor="@color/black_color"
                 android:textSize="14sp" />
 
             <TextView

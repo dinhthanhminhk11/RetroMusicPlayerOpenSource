@@ -87,11 +87,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:textColor="@color/md_white_1000"
             android:layout_marginTop="20dp"
             android:paddingVertical="16dp"
             android:text="@string/login"
-            android:textAppearance="@style/TextViewButton" />
+            android:textAppearance="@style/TextViewButton"
+            android:textColor="@color/md_white_1000" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -105,7 +105,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Bạn chưa có tài khoản?"
-                android:textColor="@color/black_color"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="14sp" />
 
             <TextView

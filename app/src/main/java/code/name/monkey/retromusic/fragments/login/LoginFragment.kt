@@ -7,6 +7,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import code.name.monkey.appthemehelper.ThemeStore
+import code.name.monkey.appthemehelper.util.ColorUtil
 import code.name.monkey.appthemehelper.util.VersionUtils
 import code.name.monkey.retromusic.App
 import code.name.monkey.retromusic.EXTRA_EMAIL
@@ -18,6 +19,7 @@ import code.name.monkey.retromusic.appshortcuts.DynamicShortcutManager
 import code.name.monkey.retromusic.databinding.FragmentLoginBinding
 import code.name.monkey.retromusic.encryption.AESUtil
 import code.name.monkey.retromusic.encryption.RSAUtil
+import code.name.monkey.retromusic.extensions.accentColor
 import code.name.monkey.retromusic.extensions.applyToolbar
 import code.name.monkey.retromusic.extensions.findNavControllerOpen
 import code.name.monkey.retromusic.extensions.findNavControllerOpenWithArgs
@@ -48,7 +50,8 @@ class LoginFragment : Fragment(R.layout.fragment_login), ColorCallback {
         val loginBinding = FragmentLoginBinding.bind(view)
         _binding = LoginBinding(loginBinding)
         applyToolbar(binding.toolbar)
-
+        binding.login.setBackgroundColor(ColorUtil.withAlpha(accentColor(), 1f))
+        binding.register.setTextColor(accentColor())
         binding.password.setText("m01675784487")
         binding.userName.setText("dinhthanhminhk11@gmail.com")
         binding.login.setOnClickListener {

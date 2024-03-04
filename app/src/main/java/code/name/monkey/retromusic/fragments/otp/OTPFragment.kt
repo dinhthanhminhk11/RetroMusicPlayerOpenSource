@@ -8,11 +8,13 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import code.name.monkey.appthemehelper.util.ColorUtil
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.TOKEN_USER
 import code.name.monkey.retromusic.TYPE_FRAGMENT_LOGIN
 import code.name.monkey.retromusic.TYPE_FRAGMENT_REGISTER
 import code.name.monkey.retromusic.databinding.FragmentOTPBinding
+import code.name.monkey.retromusic.extensions.accentColor
 import code.name.monkey.retromusic.extensions.applyToolbar
 import code.name.monkey.retromusic.model.request.BodyRequest
 import code.name.monkey.retromusic.model.response.UserData
@@ -40,6 +42,7 @@ class OTPFragment : Fragment(R.layout.fragment_o_t_p) {
         super.onViewCreated(view, savedInstanceState)
         _binding = OtpBinding(FragmentOTPBinding.bind(view))
         applyToolbar(binding.toolbar)
+        binding.confirm.setBackgroundColor(ColorUtil.withAlpha(accentColor(), 1f))
         initView()
     }
 

@@ -18,6 +18,7 @@ import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import code.name.monkey.appthemehelper.util.ColorUtil
 import code.name.monkey.retromusic.BASE_URL_IMAGE
 import code.name.monkey.retromusic.Constants.USER_BANNER
 import code.name.monkey.retromusic.Constants.USER_PROFILE
@@ -108,6 +109,8 @@ class UserInfoFragment : Fragment() {
         binding.next.accentColor()
         binding.email?.isEnabled = false
         binding.phone?.isEnabled = false
+        binding.login?.setBackgroundColor(ColorUtil.withAlpha(accentColor(), 1f))
+        binding.logOut?.setBackgroundColor(ColorUtil.withAlpha(accentColor(), 1f))
 //        toggleVisibilityWithAnimation(binding.loginNull!!)
 //        toggleVisibilityWithAnimation(binding.loginNotNullContainer!!)
         binding.userImage.setOnClickListener {
@@ -256,7 +259,7 @@ class UserInfoFragment : Fragment() {
 
     private fun showBannerImageOptions() {
         val list = requireContext().resources.getStringArray(R.array.image_settings_options)
-        MaterialAlertDialogBuilder(requireContext()).setTitle("Banner Image")
+        MaterialAlertDialogBuilder(requireContext()).setTitle("Chọn ảnh Banner")
             .setItems(list) { _, which ->
                 when (which) {
                     0 -> selectBannerImage()
@@ -272,7 +275,7 @@ class UserInfoFragment : Fragment() {
 
     private fun showUserImageOptions() {
         val list = requireContext().resources.getStringArray(R.array.image_settings_options)
-        MaterialAlertDialogBuilder(requireContext()).setTitle("Profile Image")
+        MaterialAlertDialogBuilder(requireContext()).setTitle("Chọn ảnh avatar")
             .setItems(list) { _, which ->
                 when (which) {
                     0 -> pickNewPhoto()
@@ -287,8 +290,8 @@ class UserInfoFragment : Fragment() {
     }
 
     private fun loadProfile() {
-        loadImage(requireContext() ,BASE_URL_IMAGE + imageBanner, binding.bannerImage)
-        loadImage(requireContext() ,BASE_URL_IMAGE + image, binding.userImage)
+        loadImage(requireContext(), BASE_URL_IMAGE + imageBanner, binding.bannerImage)
+        loadImage(requireContext(), BASE_URL_IMAGE + image, binding.userImage)
     }
 
     private fun selectBannerImage() {

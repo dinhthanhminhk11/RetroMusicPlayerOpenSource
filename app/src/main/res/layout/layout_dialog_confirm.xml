@@ -50,9 +50,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textColor="@color/md_white_1000"
-            android:text="@string/confirm"
             android:background="@drawable/background_button_dialog"
+            android:text="@string/confirm"
+            android:textColor="@color/md_white_1000"
             app:backgroundTint="@null" />
     </LinearLayout>
 </LinearLayout>
