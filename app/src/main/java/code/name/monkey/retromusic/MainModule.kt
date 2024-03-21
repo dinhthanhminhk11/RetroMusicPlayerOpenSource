@@ -17,9 +17,10 @@ import code.name.monkey.retromusic.model.Genre
 import code.name.monkey.retromusic.network.provideDefaultCache
 import code.name.monkey.retromusic.network.provideLastFmRest
 import code.name.monkey.retromusic.network.provideLastFmRetrofit
-import code.name.monkey.retromusic.network.provideLoginService
+import code.name.monkey.retromusic.network.provideUserService
 import code.name.monkey.retromusic.network.provideNewApiRetrofit
 import code.name.monkey.retromusic.network.provideOkHttp
+import code.name.monkey.retromusic.network.provideSongService
 import code.name.monkey.retromusic.repository.*
 import code.name.monkey.retromusic.repository.dataSource.local.AlbumLocalDataRepository
 import code.name.monkey.retromusic.repository.dataSource.local.ArtistLocalDataRepository
@@ -31,6 +32,7 @@ import code.name.monkey.retromusic.repository.dataSource.local.RoomLocalDataRepo
 import code.name.monkey.retromusic.repository.dataSource.local.SongLocalDataRepository
 import code.name.monkey.retromusic.repository.dataSource.local.TopPlayedLocalDataRepository
 import code.name.monkey.retromusic.repository.dataSource.network.LoginRemoteDataSource
+import code.name.monkey.retromusic.repository.dataSource.network.SongRemoteDataSource
 import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealAlbumLocalDataRepositoryImpl
 import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealArtistLocalDataRepositoryImpl
 import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealGenreLocalDataRepositoryImpl
@@ -42,6 +44,7 @@ import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealSearchRep
 import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealSongLocalDataRepositoryImpl
 import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealTopPlayedLocalDataRepositoryImpl
 import code.name.monkey.retromusic.repository.dataSourceImpl.network.LoginRemoteDataSourceImpl
+import code.name.monkey.retromusic.repository.dataSourceImpl.network.SongRemoteDataSourceImpl
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.bind
@@ -67,7 +70,10 @@ val networkModelNewApi = module {
         provideNewApiRetrofit(get())
     }
     single {
-        provideLoginService(get())
+        provideUserService(get())
+    }
+    single {
+        provideSongService(get())
     }
 }
 
@@ -130,7 +136,8 @@ private val dataModule = module {
             get(),
             get(),
             get(),
-            get()
+            get(),
+            get ()
         )
     } bind Repository::class
 
@@ -182,6 +189,10 @@ private val dataModule = module {
     single {
         LoginRemoteDataSourceImpl(get())
     } bind LoginRemoteDataSource::class
+
+    single {
+        SongRemoteDataSourceImpl(get())
+    } bind SongRemoteDataSource::class
 }
 
 private val viewModules = module {

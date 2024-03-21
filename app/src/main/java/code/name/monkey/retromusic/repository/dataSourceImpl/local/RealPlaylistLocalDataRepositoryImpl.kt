@@ -125,6 +125,7 @@ class RealPlaylistLocalDataRepositoryImpl(
         val albumArtist = cursor.getStringOrNull("album_artist")
         return PlaylistSong(
             id,
+            "idSongString",
             title,
             trackNumber,
             year,

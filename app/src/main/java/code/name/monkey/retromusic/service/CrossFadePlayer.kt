@@ -131,7 +131,7 @@ class CrossFadePlayer(context: Context) : LocalPlayback(context) {
         /* We've already set DataSource if initialized is true in setNextDataSource */
         if (!hasDataSource) {
             getCurrentPlayer()?.let {
-                setDataSourceImpl(it, song.uri.toString()) { success ->
+                setDataSourceImpl(it, song.idSongString) { success ->
                     mIsInitialized = success
                     completion(success)
                 }
@@ -299,7 +299,7 @@ class CrossFadePlayer(context: Context) : LocalPlayback(context) {
                 val nextSong = MusicPlayerRemote.nextSong
                 // Switch to other player (Crossfade) only if next song exists
                 if (nextSong != null) {
-                    setDataSourceImpl(player, nextSong.uri.toString()) { success ->
+                    setDataSourceImpl(player, nextSong.idSongString) { success ->
                         if (success) switchPlayer()
                     }
                 }

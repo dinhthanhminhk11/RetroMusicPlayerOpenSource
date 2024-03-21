@@ -118,6 +118,7 @@ class RealSongLocalDataRepositoryImpl(private val context: Context) : SongLocalD
         val albumArtist = cursor.getStringOrNull("album_artist")
         return Song(
             id,
+            "idSongString",
             title,
             trackNumber,
             year,

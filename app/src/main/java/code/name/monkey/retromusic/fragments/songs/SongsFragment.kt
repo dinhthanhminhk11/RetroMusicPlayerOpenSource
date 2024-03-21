@@ -25,17 +25,31 @@ import code.name.monkey.retromusic.fragments.GridStyle
 import code.name.monkey.retromusic.fragments.ReloadType
 import code.name.monkey.retromusic.fragments.base.AbsRecyclerViewCustomGridSizeFragment
 import code.name.monkey.retromusic.helper.SortOrder.SongSortOrder
+import code.name.monkey.retromusic.network.Result
 import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.RetroUtil
 
 class SongsFragment : AbsRecyclerViewCustomGridSizeFragment<SongAdapter, GridLayoutManager>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        libraryViewModel.getSongs().observe(viewLifecycleOwner) {
-            if (it.isNotEmpty())
-                adapter?.swapDataSet(it)
-            else
-                adapter?.swapDataSet(listOf())
+        libraryViewModel.getSongs().observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Loading -> {
+//                    adapter?.swapDataSet(listOf())
+                }
+
+                is Result.Error -> {
+                    adapter?.swapDataSet(listOf())
+                }
+
+                is Result.Success -> {
+                    adapter?.swapDataSet(result.data)
+                }
+            }
+//            if (it.isNotEmpty())
+//                adapter?.swapDataSet(it)
+//            else
+//                adapter?.swapDataSet(listOf())
         }
     }
 

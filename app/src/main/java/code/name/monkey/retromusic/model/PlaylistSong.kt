@@ -9,6 +9,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 class PlaylistSong(
     override val id: Long,
+    override val idSongString: String,
     override val title: String,
     override val trackNumber: Int,
     override val year: Int,
@@ -25,6 +26,7 @@ class PlaylistSong(
     override val albumArtist: String?
 ) : Song(
     id = id,
+    idSongString = idSongString,
     title = title,
     trackNumber = trackNumber,
     year = year,

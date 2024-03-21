@@ -14,6 +14,7 @@ class SongEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "song_key")
     val songPrimaryKey: Long = 0L,
+    val idSongString: String,
     @ColumnInfo(name = "playlist_creator_id")
     val playlistCreatorId: Long,
     val id: Long,

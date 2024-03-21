@@ -1,4 +1,3 @@
-
 package code.name.monkey.retromusic.db
 
 import androidx.room.ColumnInfo
@@ -9,6 +8,7 @@ import androidx.room.PrimaryKey
 class PlayCountEntity(
     @PrimaryKey
     val id: Long,
+    val idSongString: String,
     val title: String,
     @ColumnInfo(name = "track_number")
     val trackNumber: Int,

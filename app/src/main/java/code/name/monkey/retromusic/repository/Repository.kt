@@ -103,4 +103,6 @@ interface Repository {
         image: MultipartBody.Part?,
         imageBanner: MultipartBody.Part?,
     ): Result<LoginResponse>
+
+    suspend fun getAllSong(): Result<List<Song>>
 }

@@ -48,6 +48,7 @@ import code.name.monkey.retromusic.repository.dataSource.local.RoomLocalDataRepo
 import code.name.monkey.retromusic.repository.dataSource.local.SongLocalDataRepository
 import code.name.monkey.retromusic.repository.dataSource.local.TopPlayedLocalDataRepository
 import code.name.monkey.retromusic.repository.dataSource.network.LoginRemoteDataSource
+import code.name.monkey.retromusic.repository.dataSource.network.SongRemoteDataSource
 import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealSearchRepositoryImpl
 import code.name.monkey.retromusic.util.logE
 import okhttp3.MultipartBody
@@ -66,7 +67,8 @@ class RealRepositoryImpl(
     private val topPlayedLocalDataRepository: TopPlayedLocalDataRepository,
     private val roomLocalDataRepository: RoomLocalDataRepository,
     private val localDataRepository: LocalDataRepository,
-    private val loginRemoteDataSource: LoginRemoteDataSource
+    private val loginRemoteDataSource: LoginRemoteDataSource,
+    private val songRemoteDataSource: SongRemoteDataSource
 ) : Repository {
 
     override suspend fun deleteSongs(songs: List<Song>) = roomLocalDataRepository.deleteSongs(songs)
@@ -214,6 +216,8 @@ class RealRepositoryImpl(
     ): Result<LoginResponse> {
         return responseToResource(loginRemoteDataSource.updateUser( email,fullName, image, imageBanner))
     }
+
+    override suspend fun getAllSong(): Result<List<Song>> = responseToResource(songRemoteDataSource.getAllSong())
 
     override suspend fun playlistSongs(playlistWithSongs: PlaylistWithSongs): List<Song> =
         playlistWithSongs.songs.map {

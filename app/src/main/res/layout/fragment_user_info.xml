@@ -217,7 +217,6 @@
         android:fitsSystemWindows="false"
         android:src="@drawable/ic_person_flat"
         android:text="@string/login"
-        android:visibility="gone"
         tools:layout_editor_absoluteX="256dp"
         tools:layout_editor_absoluteY="501dp" />
 </RelativeLayout>

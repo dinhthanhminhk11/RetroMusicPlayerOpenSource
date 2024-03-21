@@ -12,6 +12,7 @@ class HistoryEntity(
     val title: String,
     @ColumnInfo(name = "track_number")
     val trackNumber: Int,
+    val idSongString: String,
     val year: Int,
     val duration: Long,
     val data: String,

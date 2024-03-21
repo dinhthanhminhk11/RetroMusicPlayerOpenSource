@@ -19,6 +19,7 @@ fun Song.toHistoryEntity(timePlayed: Long): HistoryEntity {
     return HistoryEntity(
         id = id,
         title = title,
+        idSongString = idSongString,
         trackNumber = trackNumber,
         year = year,
         duration = duration,
@@ -38,6 +39,7 @@ fun Song.toSongEntity(playListId: Long): SongEntity {
     return SongEntity(
         playlistCreatorId = playListId,
         id = id,
+        idSongString = idSongString,
         title = title,
         trackNumber = trackNumber,
         year = year,
@@ -56,6 +58,7 @@ fun Song.toSongEntity(playListId: Long): SongEntity {
 fun SongEntity.toSong(): Song {
     return Song(
         id = id,
+        idSongString = idSongString,
         title = title,
         trackNumber = trackNumber,
         year = year,
@@ -74,6 +77,7 @@ fun SongEntity.toSong(): Song {
 fun PlayCountEntity.toSong(): Song {
     return Song(
         id = id,
+        idSongString = idSongString,
         title = title,
         trackNumber = trackNumber,
         year = year,
@@ -92,6 +96,7 @@ fun PlayCountEntity.toSong(): Song {
 fun HistoryEntity.toSong(): Song {
     return Song(
         id = id,
+        idSongString = idSongString,
         title = title,
         trackNumber = trackNumber,
         year = year,
@@ -111,6 +116,7 @@ fun Song.toPlayCount(): PlayCountEntity {
     return PlayCountEntity(
         id = id,
         title = title,
+        idSongString = idSongString,
         trackNumber = trackNumber,
         year = year,
         duration = duration,

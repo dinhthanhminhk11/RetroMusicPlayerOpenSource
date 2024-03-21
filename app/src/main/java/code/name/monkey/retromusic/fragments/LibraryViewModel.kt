@@ -36,7 +36,7 @@ class LibraryViewModel(
     private val home = MutableLiveData<List<Home>>()
     private val suggestions = MutableLiveData<List<Song>>()
     private val albums = MutableLiveData<List<Album>>()
-    private val songs = MutableLiveData<List<Song>>()
+    private val songs = MutableLiveData<Result<List<Song>>>()
     private val artists = MutableLiveData<List<Artist>>()
     private val playlists = MutableLiveData<List<PlaylistWithSongs>>()
     private val genres = MutableLiveData<List<Genre>>()
@@ -62,7 +62,7 @@ class LibraryViewModel(
 
     fun getSearchResult(): LiveData<List<Any>> = searchResults
 
-    fun getSongs(): LiveData<List<Song>> = songs
+    fun getSongs(): LiveData<Result<List<Song>>> = songs
 
     fun getAlbums(): LiveData<List<Album>> = albums
 
@@ -79,7 +79,7 @@ class LibraryViewModel(
     fun getFabMargin(): LiveData<Int> = fabMargin
 
     private suspend fun fetchSongs() {
-        songs.postValue(repository.allSongs())
+        songs.postValue(repository.getAllSong())
     }
 
     private suspend fun fetchAlbums() {

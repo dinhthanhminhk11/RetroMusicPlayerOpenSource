@@ -15,6 +15,7 @@ import androidx.media.AudioAttributesCompat
 import androidx.media.AudioFocusRequestCompat
 import androidx.media.AudioManagerCompat
 import code.name.monkey.appthemehelper.util.VersionUtils
+import code.name.monkey.retromusic.BASE_URL_AUDIO
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.extensions.showToast
 import code.name.monkey.retromusic.service.playback.Playback
@@ -55,6 +56,7 @@ abstract class LocalPlayback(val context: Context) : Playback, MediaPlayer.OnErr
                 }
                 setVolume(Volume.NORMAL)
             }
+
             AudioManager.AUDIOFOCUS_LOSS -> {
                 // Lost focus for an unbounded amount of time: stop playback and release media playback
                 if (!isAudioFocusEnabled) {
@@ -62,6 +64,7 @@ abstract class LocalPlayback(val context: Context) : Playback, MediaPlayer.OnErr
                     callbacks?.onPlayStateChanged()
                 }
             }
+
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
                 // Lost focus for a short time, but we have to stop
                 // playback. We don't release the media playback because playback
@@ -71,6 +74,7 @@ abstract class LocalPlayback(val context: Context) : Playback, MediaPlayer.OnErr
                 callbacks?.onPlayStateChanged()
                 isPausedByTransientLossOfFocus = wasPlaying
             }
+
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
                 // Lost focus for a short time, but it's ok to keep playing
                 // at an attenuated level
@@ -120,11 +124,16 @@ abstract class LocalPlayback(val context: Context) : Playback, MediaPlayer.OnErr
     ) {
         player.reset()
         try {
+//            if (path.startsWith("content://")) {
+//                player.setDataSource(context , path.toUri())
+////                player.setDataSource("https://res.cloudinary.com/dw6wgytc3/video/upload/v1708268427/NODEJS/dgamzmzmkmx8ktrstusv.mp3") // set dữ liệu nhạc
+//            } else {
+//                player.setDataSource(path)
+//            }
             if (path.startsWith("content://")) {
                 player.setDataSource(context , path.toUri())
-//                player.setDataSource("https://res.cloudinary.com/dw6wgytc3/video/upload/v1708268427/NODEJS/dgamzmzmkmx8ktrstusv.mp3") // set dữ liệu nhạc
             } else {
-                player.setDataSource(path)
+                player.setDataSource("${BASE_URL_AUDIO + path}/index.m3u8") // set dữ liệu nhạc
             }
             player.setAudioAttributes(
                 AudioAttributes.Builder()

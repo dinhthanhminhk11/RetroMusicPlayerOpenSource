@@ -48,6 +48,7 @@ const val TOKEN_USER = "TOKEN_USER"
 const val BASE_URL = "http://192.168.28.139:3000"
 const val BASE_URL_API = "$BASE_URL/api/"
 const val BASE_URL_IMAGE = "$BASE_URL/uploads/"
+const val BASE_URL_AUDIO = "$BASE_URL/audio/"
 
 const val EXTRA_PLAYLIST_TYPE = "type"
 const val EXTRA_GENRE = "extra_genre"

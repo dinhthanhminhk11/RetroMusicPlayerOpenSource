@@ -83,8 +83,12 @@ fun provideNewApiRetrofit(client: OkHttpClient): Retrofit {
         .build()
 }
 
-fun provideLoginService(retrofit: Retrofit): UserService {
+fun provideUserService(retrofit: Retrofit): UserService {
     return retrofit.create(UserService::class.java)
+}
+
+fun provideSongService(retrofit: Retrofit): SongService {
+    return retrofit.create(SongService::class.java)
 }
 
 fun provideDeezerRest(retrofit: Retrofit): DeezerService {

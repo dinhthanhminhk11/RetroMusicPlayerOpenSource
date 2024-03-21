@@ -1,13 +1,14 @@
-
 package code.name.monkey.retromusic.model
 
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 // update equals and hashcode if fields changes
 @Parcelize
 open class Song(
     open val id: Long,
+    @SerializedName("_id") open val idSongString: String,
     open val title: String,
     open val trackNumber: Int,
     open val year: Int,
@@ -70,6 +71,7 @@ open class Song(
         @JvmStatic
         val emptySong = Song(
             id = -1,
+            idSongString = "",
             title = "",
             trackNumber = -1,
             year = -1,
