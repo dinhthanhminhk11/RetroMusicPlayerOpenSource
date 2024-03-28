@@ -2,7 +2,10 @@
 
 package code.name.monkey.retromusic.model
 
+import com.google.gson.annotations.SerializedName
+
 data class Album(
+    @SerializedName("idAlbum")
     val id: Long,
     val songs: List<Song>
 ) {

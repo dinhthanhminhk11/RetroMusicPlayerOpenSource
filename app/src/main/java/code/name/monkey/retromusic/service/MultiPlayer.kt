@@ -39,7 +39,7 @@ class MultiPlayer(context: Context) : LocalPlayback(context) {
         completion: (success: Boolean) -> Unit,
     ) {
         isInitialized = false
-        setDataSourceImpl(mCurrentMediaPlayer, song.idSongString) { success ->
+        setDataSourceImpl(mCurrentMediaPlayer, song.idSongString) { success ->//
             isInitialized = success
             if (isInitialized) {
                 setNextDataSource(null)

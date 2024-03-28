@@ -17,6 +17,7 @@ import code.name.monkey.retromusic.fragments.base.AbsRecyclerViewCustomGridSizeF
 import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.helper.SortOrder.AlbumSortOrder
 import code.name.monkey.retromusic.interfaces.IAlbumClickListener
+import code.name.monkey.retromusic.network.Result
 import code.name.monkey.retromusic.service.MusicService
 import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.RetroUtil
@@ -26,11 +27,25 @@ class AlbumsFragment : AbsRecyclerViewCustomGridSizeFragment<AlbumAdapter, GridL
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        libraryViewModel.getAlbums().observe(viewLifecycleOwner) {
-            if (it.isNotEmpty())
-                adapter?.swapDataSet(it)
-            else
-                adapter?.swapDataSet(listOf())
+        libraryViewModel.getAlbums().observe(viewLifecycleOwner) {result ->
+//            if (it.isNotEmpty())
+//                adapter?.swapDataSet(it)
+//            else
+//                adapter?.swapDataSet(listOf())
+
+            when (result) {
+                is Result.Loading -> {
+//                    adapter?.swapDataSet(listOf())
+                }
+
+                is Result.Error -> {
+                    adapter?.swapDataSet(listOf())
+                }
+
+                is Result.Success -> {
+                    adapter?.swapDataSet(result.data)
+                }
+            }
         }
     }
 
@@ -44,13 +59,23 @@ class AlbumsFragment : AbsRecyclerViewCustomGridSizeFragment<AlbumAdapter, GridL
         get() = true
 
     override fun onShuffleClicked() {
-        libraryViewModel.getAlbums().value?.let {
-            MusicPlayerRemote.setShuffleMode(MusicService.SHUFFLE_MODE_NONE)
-            MusicPlayerRemote.openQueue(
-                queue = it.shuffled().flatMap { album -> album.songs },
-                startPosition = 0,
-                startPlaying = true
-            )
+        libraryViewModel.getAlbums().value?.let {result->
+            when (result) {
+                is Result.Success -> {
+                    val albums = result.data
+                    MusicPlayerRemote.setShuffleMode(MusicService.SHUFFLE_MODE_NONE)
+                    MusicPlayerRemote.openQueue(
+                        queue = albums.flatMap { album -> album.songs },
+                        startPosition = 0,
+                        startPlaying = true
+                    )
+                }
+                is Result.Loading -> {
+                }
+                is Result.Error -> {
+                    val error = result.error
+                }
+            }
         }
     }
 

@@ -35,7 +35,7 @@ class LibraryViewModel(
     private val _paletteColor = MutableLiveData<Int>()
     private val home = MutableLiveData<List<Home>>()
     private val suggestions = MutableLiveData<List<Song>>()
-    private val albums = MutableLiveData<List<Album>>()
+    private val albums = MutableLiveData<Result<List<Album>>>()
     private val songs = MutableLiveData<Result<List<Song>>>()
     private val artists = MutableLiveData<List<Artist>>()
     private val playlists = MutableLiveData<List<PlaylistWithSongs>>()
@@ -64,7 +64,7 @@ class LibraryViewModel(
 
     fun getSongs(): LiveData<Result<List<Song>>> = songs
 
-    fun getAlbums(): LiveData<List<Album>> = albums
+    fun getAlbums(): LiveData<Result<List<Album>>> = albums
 
     fun getArtists(): LiveData<List<Artist>> = artists
 
@@ -83,7 +83,7 @@ class LibraryViewModel(
     }
 
     private suspend fun fetchAlbums() {
-        albums.postValue(repository.fetchAlbums())
+        albums.postValue(repository.getAllAlbum())
     }
 
     private suspend fun fetchArtists() {

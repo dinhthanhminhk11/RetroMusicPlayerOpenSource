@@ -14,6 +14,7 @@ import code.name.monkey.retromusic.fragments.otp.OtpViewModel
 import code.name.monkey.retromusic.fragments.playlists.PlaylistDetailsViewModel
 import code.name.monkey.retromusic.fragments.register.RegisterViewModel
 import code.name.monkey.retromusic.model.Genre
+import code.name.monkey.retromusic.network.provideAlbumService
 import code.name.monkey.retromusic.network.provideDefaultCache
 import code.name.monkey.retromusic.network.provideLastFmRest
 import code.name.monkey.retromusic.network.provideLastFmRetrofit
@@ -31,6 +32,7 @@ import code.name.monkey.retromusic.repository.dataSource.local.PlaylistLocalData
 import code.name.monkey.retromusic.repository.dataSource.local.RoomLocalDataRepository
 import code.name.monkey.retromusic.repository.dataSource.local.SongLocalDataRepository
 import code.name.monkey.retromusic.repository.dataSource.local.TopPlayedLocalDataRepository
+import code.name.monkey.retromusic.repository.dataSource.network.AlbumRemoteDataSource
 import code.name.monkey.retromusic.repository.dataSource.network.LoginRemoteDataSource
 import code.name.monkey.retromusic.repository.dataSource.network.SongRemoteDataSource
 import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealAlbumLocalDataRepositoryImpl
@@ -43,6 +45,7 @@ import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealRoomLocal
 import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealSearchRepositoryImpl
 import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealSongLocalDataRepositoryImpl
 import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealTopPlayedLocalDataRepositoryImpl
+import code.name.monkey.retromusic.repository.dataSourceImpl.network.AlbumRemoteDataSourceImpl
 import code.name.monkey.retromusic.repository.dataSourceImpl.network.LoginRemoteDataSourceImpl
 import code.name.monkey.retromusic.repository.dataSourceImpl.network.SongRemoteDataSourceImpl
 import org.koin.android.ext.koin.androidContext
@@ -74,6 +77,9 @@ val networkModelNewApi = module {
     }
     single {
         provideSongService(get())
+    }
+    single {
+        provideAlbumService(get())
     }
 }
 
@@ -137,7 +143,8 @@ private val dataModule = module {
             get(),
             get(),
             get(),
-            get ()
+            get (),
+            get()
         )
     } bind Repository::class
 
@@ -193,6 +200,9 @@ private val dataModule = module {
     single {
         SongRemoteDataSourceImpl(get())
     } bind SongRemoteDataSource::class
+    single {
+        AlbumRemoteDataSourceImpl(get())
+    } bind AlbumRemoteDataSource::class
 }
 
 private val viewModules = module {

@@ -1,4 +1,3 @@
-
 package code.name.monkey.retromusic.fragments.albums
 
 import android.app.ActivityOptions
@@ -110,16 +109,27 @@ class AlbumDetailsFragment : AbsMainActivityFragment(R.layout.fragment_album_det
         binding.toolbar.title = " detail album "
         binding.albumCoverContainer.transitionName = arguments.extraAlbumId.toString()
         postponeEnterTransition()
-        detailsViewModel.getAlbum().observe(viewLifecycleOwner) { album ->
-            view.doOnPreDraw {
-                startPostponedEnterTransition()
-            }
-            albumArtistExists = !album.albumArtist.isNullOrEmpty()
-            showAlbum(album)
-            binding.artistImage.transitionName = if (albumArtistExists) {
-                album.albumArtist
-            } else {
-                album.artistId.toString()
+        detailsViewModel.getAlbum().observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Loading -> {
+                }
+
+                is Result.Error -> {
+
+                }
+
+                is Result.Success -> {
+                    view.doOnPreDraw {
+                        startPostponedEnterTransition()
+                    }
+                    albumArtistExists = !result.data.albumArtist.isNullOrEmpty()
+                    showAlbum(result.data)
+                    binding.artistImage.transitionName = if (albumArtistExists) {
+                        result.data.albumArtist
+                    } else {
+                        result.data.artistId.toString()
+                    }
+                }
             }
         }
 
@@ -215,15 +225,15 @@ class AlbumDetailsFragment : AbsMainActivityFragment(R.layout.fragment_album_det
         }
         loadAlbumCover(album)
         simpleSongAdapter.swapDataSet(album.songs)
-        if (albumArtistExists) {
-            detailsViewModel.getAlbumArtist(album.albumArtist.toString())
-                .observe(viewLifecycleOwner) {
-                    loadArtistImage(it)
-                }
+        if (albumArtistExists) { // đoạn này sửa lí sau
+//            detailsViewModel.getAlbumArtist(album.albumArtist.toString())
+//                .observe(viewLifecycleOwner) {
+//                    loadArtistImage(it)
+//                }
         } else {
-            detailsViewModel.getArtist(album.artistId).observe(viewLifecycleOwner) {
-                loadArtistImage(it)
-            }
+//            detailsViewModel.getArtist(album.artistId).observe(viewLifecycleOwner) {
+//                loadArtistImage(it)
+//            }
         }
 
 

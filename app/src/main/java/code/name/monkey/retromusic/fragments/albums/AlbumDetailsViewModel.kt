@@ -15,7 +15,7 @@ class AlbumDetailsViewModel(
     private val repository: RealRepositoryImpl,
     private val albumId: Long
 ) : ViewModel(), IMusicServiceEventListener {
-    private val albumDetails = MutableLiveData<Album>()
+    private val albumDetails = MutableLiveData<Result<Album>>()
 
     init {
         fetchAlbum()
@@ -23,11 +23,11 @@ class AlbumDetailsViewModel(
 
     private fun fetchAlbum() {
         viewModelScope.launch(IO) {
-            albumDetails.postValue(repository.albumByIdAsync(albumId))
+            albumDetails.postValue(repository.getAlbumById(albumId))
         }
     }
 
-    fun getAlbum(): LiveData<Album> = albumDetails
+    fun getAlbum(): LiveData<Result<Album>> = albumDetails
 
     fun getArtist(artistId: Long): LiveData<Artist> = liveData(IO) {
         val artist = repository.artistById(artistId)
