@@ -225,13 +225,13 @@ class AlbumDetailsFragment : AbsMainActivityFragment(R.layout.fragment_album_det
         }
         loadAlbumCover(album)
         simpleSongAdapter.swapDataSet(album.songs)
-        if (albumArtistExists) { // đoạn này sửa lí sau
+        if (albumArtistExists) { // đoạn này sửa lí sau đoạn này get album hết album của thằng tác giả
 //            detailsViewModel.getAlbumArtist(album.albumArtist.toString())
 //                .observe(viewLifecycleOwner) {
 //                    loadArtistImage(it)
 //                }
         } else {
-//            detailsViewModel.getArtist(album.artistId).observe(viewLifecycleOwner) {
+//            detailsViewModel.getArtist(album.artistId).observe(viewLifecycleOwner) {// đoạn này get thoogn tin tác giả
 //                loadArtistImage(it)
 //            }
         }

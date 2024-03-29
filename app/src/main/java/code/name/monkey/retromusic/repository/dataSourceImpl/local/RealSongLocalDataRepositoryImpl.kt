@@ -104,6 +104,7 @@ class RealSongLocalDataRepositoryImpl(private val context: Context) : SongLocalD
         cursor: Cursor
     ): Song {
         val id = cursor.getLong(AudioColumns._ID)
+//        val idSongString = cursor.getString(Constants.ID_SONG_STRING)
         val title = cursor.getString(AudioColumns.TITLE)
         val trackNumber = cursor.getInt(AudioColumns.TRACK)
         val year = cursor.getInt(AudioColumns.YEAR)

@@ -24,6 +24,7 @@ object Constants {
         MediaStore.Audio.AudioColumns.IS_MUSIC + "=1" + " AND " + MediaStore.Audio.AudioColumns.TITLE + " != ''"
 
     const val DATA = "_data"
+    const val ID_SONG_STRING = "idSongString"
 
     @Suppress("Deprecation")
     val baseProjection = arrayOf(

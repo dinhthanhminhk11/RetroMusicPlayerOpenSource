@@ -62,7 +62,7 @@ class LyricsFragment : AbsMainActivityFragment(R.layout.fragment_lyrics),
     private val googleSearchLrcUrl: String
         get() {
             var baseUrl = "http://www.google.com/search?"
-            var query = song.title + "+" + song.artistName
+            var query = "i do" + "+" + "911"
             query = "q=" + query.replace(" ", "+") + " lyrics"
             baseUrl += query
             return baseUrl

@@ -46,6 +46,7 @@ object PlaylistSongsLoader {
     private fun getPlaylistSongFromCursorImpl(cursor: Cursor, playlistId: Long): PlaylistSong {
         val id = cursor.getLong(Members.AUDIO_ID)
         val title = cursor.getString(AudioColumns.TITLE)
+//        val idSongString = cursor.getString(Constants.ID_SONG_STRING)
         val trackNumber = cursor.getInt(AudioColumns.TRACK)
         val year = cursor.getInt(AudioColumns.YEAR)
         val duration = cursor.getLong(AudioColumns.DURATION)
