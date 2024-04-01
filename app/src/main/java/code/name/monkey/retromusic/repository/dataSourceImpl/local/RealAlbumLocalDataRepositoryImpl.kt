@@ -40,7 +40,7 @@ class RealAlbumLocalDataRepositoryImpl(private val songRepository: RealSongLocal
             getSongLoaderSortOrder()
         )
         val songs = songRepository.songs(cursor)
-        val album = Album(albumId, songs)
+        val album = Album(albumId, songs , "" , "")
         return sortAlbumSongs(album)
     }
 
@@ -50,7 +50,7 @@ class RealAlbumLocalDataRepositoryImpl(private val songRepository: RealSongLocal
         songs: List<Song>,
         sorted: Boolean = true
     ): List<Album> {
-        val grouped = songs.groupBy { it.albumId }.map { Album(it.key, it.value) }
+        val grouped = songs.groupBy { it.albumId }.map { Album(it.key, it.value , "" , "") }
         if (!sorted) return grouped
         val collator = Collator.getInstance()
         return when (PreferenceUtil.albumSortOrder) {

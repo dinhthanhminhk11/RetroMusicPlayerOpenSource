@@ -48,6 +48,7 @@ import code.name.monkey.retromusic.repository.dataSource.local.RoomLocalDataRepo
 import code.name.monkey.retromusic.repository.dataSource.local.SongLocalDataRepository
 import code.name.monkey.retromusic.repository.dataSource.local.TopPlayedLocalDataRepository
 import code.name.monkey.retromusic.repository.dataSource.network.AlbumRemoteDataSource
+import code.name.monkey.retromusic.repository.dataSource.network.ArtistRemoteDataSource
 import code.name.monkey.retromusic.repository.dataSource.network.LoginRemoteDataSource
 import code.name.monkey.retromusic.repository.dataSource.network.SongRemoteDataSource
 import code.name.monkey.retromusic.repository.dataSourceImpl.local.RealSearchRepositoryImpl
@@ -70,7 +71,8 @@ class RealRepositoryImpl(
     private val localDataRepository: LocalDataRepository,
     private val loginRemoteDataSource: LoginRemoteDataSource,
     private val songRemoteDataSource: SongRemoteDataSource,
-    private val albumRemoteDataSource: AlbumRemoteDataSource
+    private val albumRemoteDataSource: AlbumRemoteDataSource,
+    private val artistRemoteDataSource: ArtistRemoteDataSource
 ) : Repository {
 
     override suspend fun deleteSongs(songs: List<Song>) = roomLocalDataRepository.deleteSongs(songs)
@@ -235,6 +237,9 @@ class RealRepositoryImpl(
     override suspend fun getAlbumById(id: Long): Result<Album> =
         responseToResource(albumRemoteDataSource.getAlbumById(id))
 
+    override suspend fun getArtistById(id: String): Result<Artist> =
+        responseToResource(artistRemoteDataSource.getArtistById(id))
+
     override suspend fun playlistSongs(playlistWithSongs: PlaylistWithSongs): List<Song> =
         playlistWithSongs.songs.map {
             it.toSong()
@@ -329,9 +334,10 @@ class RealRepositoryImpl(
         roomLocalDataRepository.favoritePlaylistLiveData(context.getString(R.string.favorites))
 
     override suspend fun suggestions(): List<Song> {
-        return NotPlayedPlaylist().songs().shuffled().takeIf {
-            it.size > 9
-        } ?: emptyList()
+        return NotPlayedPlaylist().songs().shuffled()
+            .takeIf {//Bằng cách này, nếu danh sách ban đầu có ít hơn 10 bài hát, kết quả trả về sẽ là một danh sách trống (emptyList()), ngăn không cho danh sách có ít bài hát được trả về.
+                it.size > 9
+            } ?: emptyList()
     }
 
     override suspend fun genresHome(): Home {

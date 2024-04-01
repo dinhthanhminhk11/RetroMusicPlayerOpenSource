@@ -1,4 +1,3 @@
-
 package code.name.monkey.retromusic.fragments.artists
 
 import androidx.lifecycle.*
@@ -12,10 +11,9 @@ import kotlinx.coroutines.launch
 
 class ArtistDetailsViewModel(
     private val realRepositoryImpl: RealRepositoryImpl,
-    private val artistId: Long?,
-    private val artistName: String?
+    private val artistId: String?
 ) : ViewModel(), IMusicServiceEventListener {
-    private val artistDetails = MutableLiveData<Artist>()
+    private val artistDetails = MutableLiveData<Result<Artist>>()
 
     init {
         fetchArtist()
@@ -23,13 +21,12 @@ class ArtistDetailsViewModel(
 
     private fun fetchArtist() {
         viewModelScope.launch(IO) {
-            artistId?.let { artistDetails.postValue(realRepositoryImpl.artistById(it)) }
-
-            artistName?.let { artistDetails.postValue(realRepositoryImpl.albumArtistByName(it)) }
+            artistId?.let { artistDetails.postValue(realRepositoryImpl.getArtistById(it)) }
+//            artistName?.let { /*artistDetails.postValue(realRepositoryImpl.albumArtistByName(it))*/ }
         }
     }
 
-    fun getArtist(): LiveData<Artist> = artistDetails
+    fun getArtist(): LiveData<Result<Artist>> = artistDetails
 
     fun getArtistInfo(
         name: String,

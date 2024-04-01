@@ -12,7 +12,7 @@ class AlbumArtistDetailsFragment : AbsArtistDetailsFragment() {
     override val detailsViewModel: ArtistDetailsViewModel by viewModel {
         parametersOf(null, arguments.extraArtistName)
     }
-    override val artistId: Long?
+    override val artistId: String?
         get() = null
     override val artistName: String
         get() = arguments.extraArtistName

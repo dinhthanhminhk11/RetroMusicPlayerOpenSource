@@ -35,7 +35,7 @@ class RealArtistLocalDataRepositoryImpl(
             )
             val albums = albumRepository.splitIntoAlbums(songs)
                 .filter { it.albumArtist == Artist.VARIOUS_ARTISTS_DISPLAY_NAME }
-            return Artist(Artist.VARIOUS_ARTISTS_ID, albums)
+            return Artist(Artist.VARIOUS_ARTISTS_ID, "",  albums)
         }
 
         val songs = songRepository.songs(
@@ -45,7 +45,7 @@ class RealArtistLocalDataRepositoryImpl(
                 getSongLoaderSortOrder()
             )
         )
-        return Artist(artistId, albumRepository.splitIntoAlbums(songs))
+        return Artist(artistId, "",albumRepository.splitIntoAlbums(songs))
     }
 
     override fun albumArtist(artistName: String): Artist {
@@ -60,7 +60,7 @@ class RealArtistLocalDataRepositoryImpl(
             )
             val albums = albumRepository.splitIntoAlbums(songs)
                 .filter { it.albumArtist == Artist.VARIOUS_ARTISTS_DISPLAY_NAME }
-            return Artist(Artist.VARIOUS_ARTISTS_ID, albums, true)
+            return Artist(Artist.VARIOUS_ARTISTS_ID,"", albums, true)
         }
 
         val songs = songRepository.songs(
@@ -70,7 +70,7 @@ class RealArtistLocalDataRepositoryImpl(
                 getSongLoaderSortOrder()
             )
         )
-        return Artist(artistName, albumRepository.splitIntoAlbums(songs), true)
+        return Artist(artistName,"", albumRepository.splitIntoAlbums(songs), true)
     }
 
     override fun artists(): List<Artist> {
@@ -131,9 +131,9 @@ class RealArtistLocalDataRepositoryImpl(
                 val currentAlbums = it.value
                 if (currentAlbums.isNotEmpty()) {
                     if (currentAlbums[0].albumArtist == Artist.VARIOUS_ARTISTS_DISPLAY_NAME) {
-                        Artist(Artist.VARIOUS_ARTISTS_ID, currentAlbums, true)
+                        Artist(Artist.VARIOUS_ARTISTS_ID, "",currentAlbums, true)
                     } else {
-                        Artist(currentAlbums[0].artistId, currentAlbums, true)
+                        Artist(currentAlbums[0].artistId, "",currentAlbums, true)
                     }
                 } else {
                     Artist.empty
@@ -144,7 +144,7 @@ class RealArtistLocalDataRepositoryImpl(
 
     fun splitIntoArtists(albums: List<Album>): List<Artist> {
         return albums.groupBy { it.artistId }
-            .map { Artist(it.key, it.value) }
+            .map { Artist(it.key, "",it.value) }
     }
 
     private fun sortArtists(artists: List<Artist>): List<Artist> {

@@ -1,5 +1,3 @@
-
-
 package code.name.monkey.retromusic.model
 
 import com.google.gson.annotations.SerializedName
@@ -7,8 +5,9 @@ import com.google.gson.annotations.SerializedName
 data class Album(
     @SerializedName("idAlbum")
     val id: Long,
-    val songs: List<Song>
-) {
+    val songs: List<Song>,
+    val artistIdString: String,
+    val artistImage: String) {
     val title: String
         get() = safeGetFirstSong().albumName
 
@@ -35,6 +34,6 @@ data class Album(
     }
 
     companion object {
-        val empty = Album(-1, emptyList())
+        val empty = Album(-1, emptyList(), "" , "")
     }
 }

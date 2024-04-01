@@ -1,5 +1,6 @@
 package code.name.monkey.retromusic.fragments.artists
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
@@ -21,6 +22,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import code.name.monkey.retromusic.BASE_URL_IMAGE
 import code.name.monkey.retromusic.EXTRA_ALBUM_ID
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.adapter.album.HorizontalAlbumAdapter
@@ -29,6 +31,7 @@ import code.name.monkey.retromusic.databinding.FragmentArtistDetailsBinding
 import code.name.monkey.retromusic.dialogs.AddToPlaylistDialog
 import code.name.monkey.retromusic.extensions.applyColor
 import code.name.monkey.retromusic.extensions.applyOutlineColor
+import code.name.monkey.retromusic.extensions.loadImage
 import code.name.monkey.retromusic.extensions.show
 import code.name.monkey.retromusic.extensions.showToast
 import code.name.monkey.retromusic.extensions.surfaceColor
@@ -65,7 +68,7 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
     private val binding get() = _binding!!
 
     abstract val detailsViewModel: ArtistDetailsViewModel
-    abstract val artistId: Long?
+    abstract val artistId: String?
     abstract val artistName: String?
     private lateinit var artist: Artist
     private lateinit var songAdapter: SimpleSongAdapter
@@ -94,11 +97,23 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         binding.toolbar.title = null
         binding.artistCoverContainer.transitionName = (artistId ?: artistName).toString()
         postponeEnterTransition()
-        detailsViewModel.getArtist().observe(viewLifecycleOwner) {
-            view.doOnPreDraw {
-                startPostponedEnterTransition()
+        detailsViewModel.getArtist().observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Loading -> {
+                }
+
+                is Result.Error -> {
+
+                }
+
+                is Result.Success -> {
+                    view.doOnPreDraw {
+                        startPostponedEnterTransition()
+                    }
+                    showArtist(result.data)
+                }
             }
-            showArtist(it)
+
         }
         setupRecyclerView()
 
@@ -136,13 +151,14 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
         }
     }
 
+    @SuppressLint("UseRequireInsteadOfGet")
     private fun showArtist(artist: Artist) {
         if (artist.songCount == 0) {
             findNavController().navigateUp()
             return
         }
         this.artist = artist
-        loadArtistImage(artist)
+        loadImage(activity!! , BASE_URL_IMAGE + artist.image , binding.image)
         if (PreferenceUtil.isAllowedToDownloadMetadata(requireContext())) {
             loadBiography(artist.name)
         }
@@ -174,14 +190,41 @@ abstract class AbsArtistDetailsFragment : AbsMainActivityFragment(R.layout.fragm
     ) {
         biography = null
         this.lang = lang
-        detailsViewModel.getArtistInfo(name, lang, null)
-            .observe(viewLifecycleOwner) { result ->
-                when (result) {
-                    is Result.Loading -> logD("Loading")
-                    is Result.Error -> logE("Error")
-                    is Result.Success -> artistInfo(result.data)
-                }
-            }
+//        detailsViewModel.getArtistInfo(name, lang, null)
+//            .observe(viewLifecycleOwner) { result ->
+//                when (result) {
+//                    is Result.Loading -> logD("Loading")
+//                    is Result.Error -> logE("Error")
+//                    is Result.Success -> artistInfo(result.data)
+//                }
+//            }
+
+
+//        val lastFmArtist = LastFmArtist()
+//
+//        val stats = LastFmArtist.Artist.Stats().apply {
+//            listeners = "100"
+//            playcount = "200"
+//        }
+//
+//        val bio = LastFmArtist.Artist.Bio().apply {
+//            content = "This is a fake bio."
+//        }
+//
+//        val image1 = LastFmArtist.Artist.Image().apply {
+//            text = "https://example.com/image1.jpg"
+//            size = "large"
+//        }
+//
+//        val image2 = LastFmArtist.Artist.Image().apply {
+//            text = "https://example.com/image2.jpg"
+//            size = "medium"
+//        }
+//
+//        lastFmArtist.artist.stats = stats
+//        lastFmArtist.artist.bio = bio
+//        lastFmArtist.artist.image = listOf(image1, image2)
+//        artistInfo(lastFmArtist)
     }
 
     private fun artistInfo(lastFmArtist: LastFmArtist?) {

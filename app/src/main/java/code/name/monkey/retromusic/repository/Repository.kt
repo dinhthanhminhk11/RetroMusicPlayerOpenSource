@@ -107,4 +107,5 @@ interface Repository {
     suspend fun getAllSong(): Result<List<Song>>
     suspend fun getAllAlbum(): Result<List<Album>>
     suspend fun getAlbumById(id: Long): Result<Album>
+    suspend fun getArtistById(id: String): Result<Artist>
 }

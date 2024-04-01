@@ -24,10 +24,6 @@ import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.getExternalStoragePublicDirectory
 import java.text.Collator
 
-/**
- * Created by hemanths on 10/08/17.
- */
-
 
 class RealSongLocalDataRepositoryImpl(private val context: Context) : SongLocalDataRepository {
 

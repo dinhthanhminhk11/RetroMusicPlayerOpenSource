@@ -1,5 +1,6 @@
 package code.name.monkey.retromusic.fragments.albums
 
+import android.annotation.SuppressLint
 import android.app.ActivityOptions
 import android.content.Intent
 import android.graphics.Color
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import code.name.monkey.appthemehelper.common.ATHToolbarActivity.getToolbarBackgroundColor
 import code.name.monkey.appthemehelper.util.ToolbarContentTintHelper
+import code.name.monkey.retromusic.BASE_URL_IMAGE
 import code.name.monkey.retromusic.EXTRA_ALBUM_ID
 import code.name.monkey.retromusic.EXTRA_ARTIST_ID
 import code.name.monkey.retromusic.EXTRA_ARTIST_NAME
@@ -36,6 +38,7 @@ import code.name.monkey.retromusic.dialogs.DeleteSongsDialog
 import code.name.monkey.retromusic.extensions.applyColor
 import code.name.monkey.retromusic.extensions.applyOutlineColor
 import code.name.monkey.retromusic.extensions.findActivityNavController
+import code.name.monkey.retromusic.extensions.loadImage
 import code.name.monkey.retromusic.extensions.show
 import code.name.monkey.retromusic.extensions.surfaceColor
 import code.name.monkey.retromusic.fragments.base.AbsMainActivityFragment
@@ -100,6 +103,7 @@ class AlbumDetailsFragment : AbsMainActivityFragment(R.layout.fragment_album_det
         }
     }
 
+    @SuppressLint("UseRequireInsteadOfGet")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentAlbumDetailsBinding.bind(view)
@@ -129,13 +133,18 @@ class AlbumDetailsFragment : AbsMainActivityFragment(R.layout.fragment_album_det
                     } else {
                         result.data.artistId.toString()
                     }
+                    loadImage(
+                        activity!!,
+                        BASE_URL_IMAGE + result.data.artistImage,
+                        binding.artistImage
+                    )
                 }
             }
         }
 
         setupRecyclerView()
         binding.artistImage.setOnClickListener { artistView ->
-            if (albumArtistExists) {
+            /*if (albumArtistExists) {
                 findActivityNavController(R.id.fragment_container)
                     .navigate(
                         R.id.albumArtistDetailsFragment,
@@ -151,8 +160,14 @@ class AlbumDetailsFragment : AbsMainActivityFragment(R.layout.fragment_album_det
                         null,
                         FragmentNavigatorExtras(artistView to album.artistId.toString())
                     )
-            }
-
+            }*/
+            findActivityNavController(R.id.fragment_container)
+                .navigate(
+                    R.id.artistDetailsFragment,
+                    bundleOf(EXTRA_ARTIST_ID to album.artistIdString),
+                    null,
+                    FragmentNavigatorExtras(artistView to album.artistIdString)
+                )
         }
         binding.fragmentAlbumContent.playAction.setOnClickListener {
             MusicPlayerRemote.openQueue(album.songs, 0, true)
@@ -295,23 +310,23 @@ class AlbumDetailsFragment : AbsMainActivityFragment(R.layout.fragment_album_det
         }
     }
 
-    private fun loadArtistImage(artist: Artist) {
-        detailsViewModel.getMoreAlbums(artist).observe(viewLifecycleOwner) {
-            moreAlbums(it)
-        }
-        Glide.with(requireContext())
-            //.forceDownload(PreferenceUtil.isAllowedToDownloadMetadata())
-            .load(
-                RetroGlideExtension.getArtistModel(
-                    artist,
-                    PreferenceUtil.isAllowedToDownloadMetadata(requireContext())
-                )
-            )
-            .artistImageOptions(artist)
-            .dontAnimate()
-            .dontTransform()
-            .into(binding.artistImage)
-    }
+//    private fun loadArtistImage(artist: Artist) {
+//        detailsViewModel.getMoreAlbums(artist).observe(viewLifecycleOwner) {
+//            moreAlbums(it)
+//        }
+//        Glide.with(requireContext())
+//            //.forceDownload(PreferenceUtil.isAllowedToDownloadMetadata())
+//            .load(
+//                RetroGlideExtension.getArtistModel(
+//                    artist,
+//                    PreferenceUtil.isAllowedToDownloadMetadata(requireContext())
+//                )
+//            )
+//            .artistImageOptions(artist)
+//            .dontAnimate()
+//            .dontTransform()
+//            .into(binding.artistImage)
+//    }
 
     private fun loadAlbumCover(album: Album) {
         Glide.with(requireContext())

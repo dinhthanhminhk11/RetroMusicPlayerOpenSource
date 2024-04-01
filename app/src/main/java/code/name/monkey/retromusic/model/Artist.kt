@@ -1,5 +1,3 @@
-
-
 package code.name.monkey.retromusic.model
 
 import code.name.monkey.retromusic.helper.SortOrder
@@ -9,14 +7,16 @@ import java.text.Collator
 
 data class Artist(
     val id: Long,
+    val image: String,
     val albums: List<Album>,
     val isAlbumArtist: Boolean = false
 ) {
     constructor(
         artistName: String,
+        image: String,
         albums: List<Album>,
         isAlbumArtist: Boolean = false
-    ) : this(albums[0].artistId, albums, isAlbumArtist) {
+    ) : this(albums[0].artistId, image, albums, isAlbumArtist) {
         name = artistName
     }
 
@@ -27,8 +27,10 @@ data class Artist(
             return when {
                 MusicUtil.isVariousArtists(name) ->
                     VARIOUS_ARTISTS_DISPLAY_NAME
+
                 MusicUtil.isArtistNameUnknown(name) ->
                     UNKNOWN_ARTIST_DISPLAY_NAME
+
                 else -> name!!
             }
         }
@@ -56,22 +58,27 @@ data class Artist(
                     SortOrder.ArtistSongSortOrder.SONG_A_Z -> { o1, o2 ->
                         collator.compare(o1.title, o2.title)
                     }
+
                     SortOrder.ArtistSongSortOrder.SONG_Z_A -> { o1, o2 ->
                         collator.compare(o2.title, o1.title)
                     }
+
                     SortOrder.ArtistSongSortOrder.SONG_ALBUM -> { o1, o2 ->
                         collator.compare(o1.albumName, o2.albumName)
                     }
+
                     SortOrder.ArtistSongSortOrder.SONG_YEAR -> { o1, o2 ->
                         o2.year.compareTo(
                             o1.year
                         )
                     }
+
                     SortOrder.ArtistSongSortOrder.SONG_DURATION -> { o1, o2 ->
                         o1.duration.compareTo(
                             o2.duration
                         )
                     }
+
                     else -> {
                         throw IllegalArgumentException("invalid ${PreferenceUtil.artistDetailSongSortOrder}")
                     }
@@ -94,7 +101,7 @@ data class Artist(
         const val UNKNOWN_ARTIST_DISPLAY_NAME = "Unknown Artist"
         const val VARIOUS_ARTISTS_DISPLAY_NAME = "Various Artists"
         const val VARIOUS_ARTISTS_ID: Long = -2
-        val empty = Artist(-1, emptyList())
+        val empty = Artist(-1, "", emptyList())
 
     }
 }

@@ -95,6 +95,10 @@ fun provideAlbumService(retrofit: Retrofit): AlbumService {
     return retrofit.create(AlbumService::class.java)
 }
 
+fun provideArtistService(retrofit: Retrofit): ArtistService {
+    return retrofit.create(ArtistService::class.java)
+}
+
 fun provideDeezerRest(retrofit: Retrofit): DeezerService {
     val newBuilder = retrofit.newBuilder()
         .baseUrl("https://api.deezer.com/")

@@ -90,8 +90,7 @@ public class LastFmArtist {
       }
     }
 
-    public class Bio {
-
+    public static class Bio {
       @Expose private String content;
 
       public String getContent() {
